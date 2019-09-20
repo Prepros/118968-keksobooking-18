@@ -364,6 +364,52 @@ var renderPin = function (offer) {
   return itemPin;
 };
 
+
+// Отрисовка объявлений
+var renderCard = function (offer) {
+  var templateCard = document.querySelector('#card').content;
+  var mapCard = templateCard.querySelector('.map__card');
+
+  var itemCard = mapCard.cloneNode(true);
+  var title = itemCard.querySelector('.popup__title');
+  var address = itemCard.querySelector('.popup__text--address');
+  var price = itemCard.querySelector('.popup__text--price');
+  var type = itemCard.querySelector('.popup__type');
+  var roomsGuest = itemCard.querySelector('.popup__text--capacity');
+  var checkInOut = itemCard.querySelector('.popup__text--time');
+  var features = itemCard.querySelector('.popup__features');
+
+
+  title.textContent = offer.offer.title;
+  address.textContent = offer.offer.address;
+  price.textContent = offer.offer.price + '₽/ночь';
+
+  switch (offer.offer.type) {
+    case 'flat':
+      type.textContent = 'Квартира';
+      break;
+    case 'bungalo':
+      type.textContent = 'Бунгало';
+      break;
+    case 'house':
+      type.textContent = 'Дом';
+      break;
+    case 'palace':
+      type.textContent = 'Дворец';
+      break;
+  }
+
+  roomsGuest.textContent = offer.offer.rooms + ' комнаты для ' + offer.offer.guests + ' гостей';
+  checkInOut.textContent = 'Заезд после ' + offer.offer.checkin + ', выезд до ' + offer.offer.checkout;
+
+  while (features.firstChild) {
+    features.removeChild(features.firstChild);
+  }
+  
+
+  console.log(features);
+};
+
 // Добавление меток
 var addPin = function () {
   var offers = generateOffer(8);
@@ -371,6 +417,8 @@ var addPin = function () {
   for (var i = 0; i < offers.length; i++) {
     var mapItem = renderPin(offers[i]);
     mapList.appendChild(mapItem);
+
+    renderCard(offers[i]);
   }
 };
 
