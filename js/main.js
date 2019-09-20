@@ -242,11 +242,29 @@ var generatePhotoOffer = function (count) {
 
   var photos = [];
 
-  for (var i = 1; i <= count; i++) {
+  for (var i = 1; i <= 10; i++) {
     photos.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
   }
 
-  return photos;
+  var photosList = [];
+
+  for (i = 0; i < count; i++) {
+    var photosCount = randomVal(1, photos.length);
+    photosList[i] = [];
+
+    for (var j = 0, key = 0; j < photosCount; j++) {
+      var photosRandom = randomVal(0, photos.length - 1);
+
+      var item = photos[photosRandom];
+
+      if (photosList[i].indexOf(item) < 0) {
+        photosList[i][key] = item;
+        key++;
+      }
+    }
+  }
+
+  return photosList;
 };
 
 
@@ -377,13 +395,24 @@ var renderCard = function (offer) {
   var type = itemCard.querySelector('.popup__type');
   var roomsGuest = itemCard.querySelector('.popup__text--capacity');
   var checkInOut = itemCard.querySelector('.popup__text--time');
-  var features = itemCard.querySelector('.popup__features');
 
+  var featureList = itemCard.querySelector('.popup__features');
+  var featureItem = featureList.querySelectorAll('.popup__feature');
 
+  var description = itemCard.querySelector('.popup__description');
+  var avatar = itemCard.querySelector('.popup__avatar');
+  var photos = itemCard.querySelector('.popup__photos');
+
+  // Заголовок
   title.textContent = offer.offer.title;
+
+  // Адрес
   address.textContent = offer.offer.address;
+
+  // Цена
   price.textContent = offer.offer.price + '₽/ночь';
 
+  // Тип здания
   switch (offer.offer.type) {
     case 'flat':
       type.textContent = 'Квартира';
@@ -399,33 +428,74 @@ var renderCard = function (offer) {
       break;
   }
 
+  // Количество комнат и гостей
+
   roomsGuest.textContent = offer.offer.rooms + ' комнаты для ' + offer.offer.guests + ' гостей';
+
+  // Время заезда и выезда
   checkInOut.textContent = 'Заезд после ' + offer.offer.checkin + ', выезд до ' + offer.offer.checkout;
 
-  while (features.firstChild) {
-    features.removeChild(features.firstChild);
-  }
-  
+  // Услуги
+  for (var i = 0; i < featureItem.length; i++) {
+    var feature = featureItem[i];
 
-  console.log(features);
+    for (var j = 0; j < offer.offer.features.length; j++) {
+      var featureMode = 'popup__feature--' + offer.offer.features[j];
+
+      if (!feature.classList.contains(featureMode)) {
+        feature.classList.toggle('hidden');
+      }
+    }
+  }
+
+  // Описание
+  description.textContent = offer.offer.description;
+
+  // Фотографии номера
+  while (photos.firstChild) {
+    photos.removeChild(photos.firstChild);
+  }
+
+  for (i = 0; i < offer.offer.photos.length; i++) {
+    var photoItem = document.createElement('img');
+    photoItem.classList.add('popup__photo');
+    photoItem.src = offer.offer.photos[i];
+    photoItem.width = 45;
+    photoItem.height = 40;
+    photoItem.alt = offer.offer.title;
+    photos.appendChild(photoItem);
+  }
+
+  // Аватар
+  avatar.src = offer.author.avatar;
+
+  return itemCard;
 };
 
 // Добавление меток
-var addPin = function () {
-  var offers = generateOffer(8);
-
+var addPin = function (offers) {
   for (var i = 0; i < offers.length; i++) {
     var mapItem = renderPin(offers[i]);
     mapList.appendChild(mapItem);
+  }
+};
 
-    renderCard(offers[i]);
+// Добавление объявления
+var addCard = function (offers) {
+  for (var i = 0; i < offers.length; i++) {
+    var cardItem = renderCard(offers[i]);
+    mapFilterContainer.insertAdjacentElement('beforebegin', cardItem);
   }
 };
 
 // Начало программы
 var map = document.querySelector('.map');
 var mapList = map.querySelector('.map__pins');
+var mapFilterContainer = map.querySelector('.map__filters-container');
 
 map.classList.remove('map--faded');
 
-addPin();
+var offers = generateOffer(8);
+
+addPin(offers);
+addCard(offers);
