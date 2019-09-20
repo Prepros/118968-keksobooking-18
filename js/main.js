@@ -293,45 +293,45 @@ var generateOffer = function (countOffer) {
   }
 
   // Данные
-  var avatars = [generateAvatar(generateNumber(1, countOffer))];
-  var titles = [generateTitleOffer(countOffer)];
-  var address = [generateAddressOffer(countOffer)];
-  var prices = [generatePriceOffer(countOffer)];
-  var types = [generateTypeOffer(countOffer)];
-  var rooms = [generateRoomOffer(countOffer)];
-  var guests = [generateGuestsOffer(countOffer)];
-  var checkin = [generateCheckOffer(countOffer)];
-  var checkout = [generateCheckOffer(countOffer)];
-  var features = [generateFeatureOffer(countOffer)];
-  var descriptions = [generateDescriptionOffer(countOffer)];
-  var photos = [generatePhotoOffer(countOffer)];
-  var locations = [generateLocation(countOffer)];
+  var avatars = generateAvatar(generateNumber(1, countOffer));
+  var titles = generateTitleOffer(countOffer);
+  var address = generateAddressOffer(countOffer);
+  var prices = generatePriceOffer(countOffer);
+  var types = generateTypeOffer(countOffer);
+  var rooms = generateRoomOffer(countOffer);
+  var guests = generateGuestsOffer(countOffer);
+  var checkin = generateCheckOffer(countOffer);
+  var checkout = generateCheckOffer(countOffer);
+  var features = generateFeatureOffer(countOffer);
+  var descriptions = generateDescriptionOffer(countOffer);
+  var photos = generatePhotoOffer(countOffer);
+  var locations = generateLocation(countOffer);
 
   var offer = [];
 
   for (var i = 0; i < countOffer; i++) {
     offer[i] = {
       'author': {
-        'avatar': avatars[0][i]
+        'avatar': avatars[i]
       },
 
       'offer': {
-        'title': titles[0][i],
-        'address': address[0][i],
-        'price': prices[0][i],
-        'type': types[0][i],
-        'rooms': rooms[0][i],
-        'guests': guests[0][i],
-        'checkin': checkin[0][i],
-        'checkout': checkout[0][i],
-        'features': features[0][i],
-        'description': descriptions[0][i],
-        'photos': photos[0][i]
+        'title': titles[i],
+        'address': address[i],
+        'price': prices[i],
+        'type': types[i],
+        'rooms': rooms[i],
+        'guests': guests[i],
+        'checkin': checkin[i],
+        'checkout': checkout[i],
+        'features': features[i],
+        'description': descriptions[i],
+        'photos': photos[i]
       },
 
       'location': {
-        'x': locations[0][i]['x'],
-        'y': locations[0][i]['y']
+        'x': locations[i]['x'],
+        'y': locations[i]['y']
       }
     };
   }
