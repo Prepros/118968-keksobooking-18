@@ -27,9 +27,14 @@ var randomOffer = function (lenghtOffer) {
 
   var str = '';
 
-  for (var i = 0; i < lenghtOffer; i++) {
+  for (var i = 0, j = 0; i < lenghtOffer; i++, j++) {
     var abcRandom = abc[randomVal(0, abc.length - 1)];
     var letterRandom = abcRandom[randomVal(0, abcRandom.length - 1)];
+
+    if (j === 5) {
+      str += ' ';
+      j = 0;
+    }
 
     str += String(letterRandom);
   }
