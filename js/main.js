@@ -39,7 +39,7 @@ var randomOffer = function (lenghtOffer) {
 
 
 // Генерация чисел 01 - 08 / 10 - 18 / n0 - n8 кроме 9
-var genericNumber = function (minVal, maxVal) {
+var generateNumber = function (minVal, maxVal) {
   var arrayNumbers = [];
 
   for (var i = minVal, str = ''; i <= maxVal; i++) {
@@ -59,7 +59,7 @@ var genericNumber = function (minVal, maxVal) {
 
 
 // Генерация адреса аватара
-var genericAvatar = function (numbers) {
+var generateAvatar = function (numbers) {
   var avatars = [];
 
   for (var i = 0; i < numbers.length; i++) {
@@ -71,7 +71,7 @@ var genericAvatar = function (numbers) {
 
 
 // Генерация заголовков предложения
-var genericTitleOffer = function (count) {
+var generateTitleOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -87,7 +87,7 @@ var genericTitleOffer = function (count) {
 
 
 // Генерация адреса предложения
-var genericAddressOffer = function (count) {
+var generateAddressOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -103,7 +103,7 @@ var genericAddressOffer = function (count) {
 
 
 // Генерация стоимости предложения
-var genericPriceOffer = function (count) {
+var generatePriceOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -119,7 +119,7 @@ var genericPriceOffer = function (count) {
 
 
 // Генерация типа здания
-var genericTypeOffer = function (count) {
+var generateTypeOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -143,7 +143,7 @@ var genericTypeOffer = function (count) {
 
 
 // Генерация количества гостей
-var genericGuestsOffer = function (count) {
+var generateGuestsOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -159,7 +159,7 @@ var genericGuestsOffer = function (count) {
 
 
 // Генерация количества комнат
-var genericRoomOffer = function (count) {
+var generateRoomOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -175,7 +175,7 @@ var genericRoomOffer = function (count) {
 
 
 // Генерация времени регистрации/выселения
-var genericCheckOffer = function (count) {
+var generateCheckOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -198,7 +198,7 @@ var genericCheckOffer = function (count) {
 
 
 // Генерация услуг
-var genericFeatureOffer = function (count) {
+var generateFeatureOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -235,7 +235,7 @@ var genericFeatureOffer = function (count) {
 
 
 // Генерация фотографий
-var genericPhotoOffer = function (count) {
+var generatePhotoOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -251,7 +251,7 @@ var genericPhotoOffer = function (count) {
 
 
 // Генерация описания
-var genericDescriptionOffer = function (count) {
+var generateDescriptionOffer = function (count) {
   if (!count) {
     count = 1;
   }
@@ -267,7 +267,7 @@ var genericDescriptionOffer = function (count) {
 
 
 // Генерация локационных данных
-var genericLocation = function (count) {
+var generateLocation = function (count) {
   if (!count) {
     count = 1;
   }
@@ -287,25 +287,25 @@ var genericLocation = function (count) {
 
 
 // Генерация объявлений
-var genericOffer = function (countOffer) {
+var generateOffer = function (countOffer) {
   if (!countOffer || countOffer <= 0) {
     countOffer = 8;
   }
 
   // Данные
-  var avatars = [genericAvatar(genericNumber(1, countOffer))];
-  var titles = [genericTitleOffer(countOffer)];
-  var address = [genericAddressOffer(countOffer)];
-  var prices = [genericPriceOffer(countOffer)];
-  var types = [genericTypeOffer(countOffer)];
-  var rooms = [genericRoomOffer(countOffer)];
-  var guests = [genericGuestsOffer(countOffer)];
-  var checkin = [genericCheckOffer(countOffer)];
-  var checkout = [genericCheckOffer(countOffer)];
-  var features = [genericFeatureOffer(countOffer)];
-  var descriptions = [genericDescriptionOffer(countOffer)];
-  var photos = [genericPhotoOffer(countOffer)];
-  var locations = [genericLocation(countOffer)];
+  var avatars = [generateAvatar(generateNumber(1, countOffer))];
+  var titles = [generateTitleOffer(countOffer)];
+  var address = [generateAddressOffer(countOffer)];
+  var prices = [generatePriceOffer(countOffer)];
+  var types = [generateTypeOffer(countOffer)];
+  var rooms = [generateRoomOffer(countOffer)];
+  var guests = [generateGuestsOffer(countOffer)];
+  var checkin = [generateCheckOffer(countOffer)];
+  var checkout = [generateCheckOffer(countOffer)];
+  var features = [generateFeatureOffer(countOffer)];
+  var descriptions = [generateDescriptionOffer(countOffer)];
+  var photos = [generatePhotoOffer(countOffer)];
+  var locations = [generateLocation(countOffer)];
 
   var offer = [];
 
@@ -366,7 +366,7 @@ var renderPin = function (offer) {
 
 // Добавление меток
 var addPin = function () {
-  var offers = genericOffer(8);
+  var offers = generateOffer(8);
 
   for (var i = 0; i < offers.length; i++) {
     var mapItem = renderPin(offers[i]);
