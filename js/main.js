@@ -533,12 +533,24 @@ var addPin = function (pins) {
 
 // Добавление объявления
 var addCard = function (offer) {
+  removeCard();
+
   var fragment = document.createDocumentFragment();
 
   var cardItem = renderCard(offer);
   fragment.appendChild(cardItem);
 
   mapFilterContainer.before(fragment);
+  document.querySelector('.popup__close').focus();
+};
+
+// Удаление объявления
+var removeCard = function () {
+  var mapCard = map.querySelector('.map__card');
+
+  if (mapCard) {
+    mapCard.remove();
+  }
 };
 
 
