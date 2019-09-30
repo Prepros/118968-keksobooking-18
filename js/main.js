@@ -491,7 +491,7 @@ var addCard = function (offers) {
 };
 
 
-// Деактивируем страницу
+// Деактивация страницы
 var disabledPage = function () {
   var mapFaded = map.classList.contains('map--faded');
   var adFormDisabled = adForm.classList.contains('ad-form--disabled');
@@ -526,7 +526,7 @@ var disabledPage = function () {
 };
 
 
-// Активируем страницу
+// Активация страницы
 var enabledPage = function () {
   var mapFaded = map.classList.contains('map--faded');
   var adFormDisabled = adForm.classList.contains('ad-form--disabled');
@@ -588,15 +588,18 @@ var roomsAndCapacity = function () {
   var countRoom = parseInt(rooms.options[rooms.selectedIndex].value, 10);
   var countCapacity = parseInt(capacity.options[capacity.selectedIndex].value, 10);
 
-  if (countRoom === 100) {
-    capacity.setCustomValidity('Выберите вариант не для гостей.');
-  } else if (countRoom < countCapacity) {
+  if (countRoom < countCapacity) {
     capacity.setCustomValidity('Выберите вариант, чтобы количество гостей не превышало количество комнат');
+  } else if (countRoom !== 100 && countCapacity === 0) {
+    capacity.setCustomValidity('Выберите вариант, чтобы количество гостей было до ' + countRoom + ' человек');
+  } else if (countRoom === 100 && countCapacity !== 0) {
+    capacity.setCustomValidity('Выберите вариант, не для гостей');
   } else {
     capacity.setCustomValidity('');
   }
 };
 
+// Устанавливает в поле адрес координаты
 var setAddressLocate = function (locatePinMain) {
   address.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
 };
@@ -626,16 +629,25 @@ var SPACE_KEY = 32;
 // Состояние страницы
 var isPageActive = disabledPage();
 
+// Получаем начальные координаты главной метки
 var locatePinMain = getLocatePinMain(isPageActive);
+
+// Устанавливаем в поле адрес координаты главной метки
 setAddressLocate(locatePinMain);
 
+// При активации главной метки
 mapPinMain.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
+  // Активируем страницу
   isPageActive = enabledPage();
 
+  // Меняем координаты главной метки
   locatePinMain = getLocatePinMain(isPageActive);
 
+  // Устанавливаем в поле адрес координаты главной метки
   setAddressLocate(locatePinMain);
+
+  // Проверка соотношения количества комнат и мест
   roomsAndCapacity();
 });
 
@@ -647,4 +659,5 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
+// Проверка соотношения количества комнат и мест
 adForm.addEventListener('change', roomsAndCapacity, true);
