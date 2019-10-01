@@ -1,5 +1,9 @@
 'use strict';
 
+// *****************************
+// Функции для генерации данных
+// *****************************
+
 // Случайное число
 var randomVal = function (min, max) {
   min = Math.ceil(min);
@@ -9,7 +13,7 @@ var randomVal = function (min, max) {
 
 
 // Случайная строка
-var randomOffer = function (lenghtOffer) {
+var randomString = function (lenghtOffer) {
   if (!lenghtOffer || lenghtOffer <= 0) {
     lenghtOffer = 250;
   }
@@ -84,7 +88,7 @@ var generateTitleOffer = function (count) {
   var titles = [];
 
   for (var i = 1; i <= count; i++) {
-    titles.push(randomOffer(randomVal(10, 20)));
+    titles.push(randomString(randomVal(10, 20)));
   }
 
   return titles;
@@ -282,7 +286,7 @@ var generateDescriptionOffer = function (count) {
   var descriptions = [];
 
   for (var i = 1; i <= count; i++) {
-    descriptions.push(randomOffer(randomVal(100, 500)));
+    descriptions.push(randomString(randomVal(100, 500)));
   }
 
   return descriptions;
@@ -363,6 +367,10 @@ var generateOffer = function (countOffer) {
 };
 
 
+// *****************************
+// Отрисовка элементов на странице
+// *****************************
+
 // Отрисовка меток
 var renderPin = function (offer) {
   var templatePin = document.querySelector('#pin').content;
@@ -371,11 +379,10 @@ var renderPin = function (offer) {
   var itemPin = mapPin.cloneNode(true);
   var img = itemPin.querySelector('img');
 
-  // var itemPinWidth = itemPin.offsetWidth;
-  // var itemPinHeight = itemPin.offsetHeight;
-
   var itemPinWidth = 50;
   var itemPinHeight = 70;
+
+  itemPin.setAttribute('tabindex', 0);
 
   offer.location.x = Math.floor(offer.location.x - (itemPinWidth / 2));
   offer.location.y = offer.location.y - itemPinHeight;
@@ -383,6 +390,12 @@ var renderPin = function (offer) {
   itemPin.setAttribute('style', 'left: ' + offer.location.x + 'px; top: ' + offer.location.y + 'px;');
   img.src = offer.author.avatar;
   img.alt = offer.offer.title;
+
+  itemPin.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    addCard(offer);
+  });
 
   return itemPin;
 };
@@ -394,6 +407,7 @@ var renderCard = function (offer) {
   var mapCard = templateCard.querySelector('.map__card');
 
   var itemCard = mapCard.cloneNode(true);
+  var closeButton = itemCard.querySelector('.popup__close');
   var title = itemCard.querySelector('.popup__title');
   var address = itemCard.querySelector('.popup__text--address');
   var price = itemCard.querySelector('.popup__text--price');
@@ -474,33 +488,225 @@ var renderCard = function (offer) {
   // Аватар
   avatar.src = offer.author.avatar;
 
+  var closePopup = function () {
+    itemCard.remove();
+    document.removeEventListener('keydown', onEscPress);
+  };
+
+  var onEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      closePopup();
+    }
+  };
+
+  // Кнопка закрыть у объявления
+  closeButton.addEventListener('click', function () {
+    closePopup();
+  });
+
+  document.addEventListener('keydown', onEscPress);
+
   return itemCard;
 };
 
-// Добавление меток
-var addPin = function (offers) {
+
+// *****************************
+// Добавляем элементы на страницу
+// *****************************
+
+// Создаем метки
+var createPin = function (offers) {
+  var fragment = document.createDocumentFragment();
+
   for (var i = 0; i < offers.length; i++) {
     var mapItem = renderPin(offers[i]);
-    mapList.appendChild(mapItem);
+    fragment.appendChild(mapItem);
   }
+
+  return fragment;
+};
+
+// Добавляем метки
+var addPin = function (pins) {
+  mapList.appendChild(pins);
 };
 
 // Добавление объявления
-var addCard = function (offers) {
-  for (var i = 0; i < offers.length; i++) {
-    var cardItem = renderCard(offers[i]);
-    mapFilterContainer.insertAdjacentElement('beforebegin', cardItem);
+var addCard = function (offer) {
+  removeCard();
+
+  var fragment = document.createDocumentFragment();
+
+  var cardItem = renderCard(offer);
+  fragment.appendChild(cardItem);
+
+  mapFilterContainer.before(fragment);
+  document.querySelector('.popup__close').focus();
+};
+
+// Удаление объявления
+var removeCard = function () {
+  var mapCard = map.querySelector('.map__card');
+
+  if (mapCard) {
+    mapCard.remove();
   }
 };
 
+
+// *****************************
+// Переключаем состояние страницы (активная / не активная)
+// *****************************
+
+// Проверяем состояние страницы
+var checkStatePage = function (statePage) {
+  if (statePage) {
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+
+    for (var i = 0; i < mapFilterSelects.length; i++) {
+      mapFilterSelects[i].removeAttribute('disabled');
+    }
+
+    for (i = 0; i < mapFilterFieldsets.length; i++) {
+      mapFilterFieldsets[i].removeAttribute('disabled');
+    }
+
+    for (i = 0; i < adFormFieldsets.length; i++) {
+      adFormFieldsets[i].removeAttribute('disabled');
+    }
+  } else {
+    for (i = 0; i < mapFilterSelects.length; i++) {
+      mapFilterSelects[i].setAttribute('disabled', true);
+    }
+
+    for (i = 0; i < mapFilterFieldsets.length; i++) {
+      mapFilterFieldsets[i].setAttribute('disabled', true);
+    }
+
+    for (i = 0; i < adFormFieldsets.length; i++) {
+      adFormFieldsets[i].setAttribute('disabled', true);
+    }
+  }
+};
+
+
+// *****************************
+// Получаем координаты главной метки
+// *****************************
+
+var setLocatePinMain = function (statePage) {
+  var locatePinMain = {
+    x: null,
+    y: null
+  };
+
+  // Если страница активна координаты от центра метки
+  // Если страница не активна координаты от нижней стороны метки
+  if (statePage) {
+    // Высота заостренного элемента метки
+    var pinMainDownHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
+
+    locatePinMain.x = Math.floor(mapPinMain.offsetLeft + (mapPinMain.offsetWidth / 2));
+    locatePinMain.y = Math.floor(mapPinMain.offsetTop + mapPinMain.offsetHeight + pinMainDownHeight);
+  } else {
+    locatePinMain.x = Math.floor(mapPinMain.offsetLeft + (mapPinMain.offsetWidth / 2));
+    locatePinMain.y = Math.floor(mapPinMain.offsetTop + (mapPinMain.offsetHeight / 2));
+  }
+
+  // Записываем координаты в поле адрес
+  setAddressLocate(locatePinMain);
+};
+
+
+// *****************************
+// Проверка соотношения количества комнат и мест
+// *****************************
+
+var roomsAndCapacity = function () {
+  var countRoom = parseInt(rooms.options[rooms.selectedIndex].value, 10);
+  var countCapacity = parseInt(capacity.options[capacity.selectedIndex].value, 10);
+
+  if (countRoom < countCapacity) {
+    capacity.setCustomValidity('Выберите вариант, чтобы количество гостей не превышало количество комнат');
+  } else if (countRoom !== 100 && countCapacity === 0) {
+    capacity.setCustomValidity('Выберите вариант, чтобы количество гостей было до ' + countRoom + ' человек');
+  } else if (countRoom === 100 && countCapacity !== 0) {
+    capacity.setCustomValidity('Выберите вариант, не для гостей');
+  } else {
+    capacity.setCustomValidity('');
+  }
+};
+
+// Устанавливает в поле адрес координаты
+var setAddressLocate = function (locatePinMain) {
+  address.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
+};
+
+
+// *****************************
 // Начало программы
+// *****************************
+
+// Карта с метками
 var map = document.querySelector('.map');
 var mapList = map.querySelector('.map__pins');
 var mapFilterContainer = map.querySelector('.map__filters-container');
+var mapPinMain = map.querySelector('.map__pin--main');
 
-map.classList.remove('map--faded');
+// Фильтрация объявления
+var mapFilter = map.querySelector('.map__filters');
+var mapFilterSelects = mapFilter.querySelectorAll('select');
+var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
 
+// Форма добавления нового объявления
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
+var address = adForm.querySelector('#address');
+var rooms = adForm.querySelector('#room_number');
+var capacity = adForm.querySelector('#capacity');
+
+// Клавиши
+var ENTER_KEY = 13;
+var SPACE_KEY = 32;
+var ESC_KEY = 27;
+
+// Генерируем массив объявлений
 var offers = generateOffer(8);
 
-addPin(offers);
-addCard(offers);
+// Создаем метки объявлений
+var pins = createPin(offers);
+
+// По умолчанию страница не активна
+checkStatePage(false);
+
+// Координаты главной метки по умолчанию
+setLocatePinMain(false);
+
+// Проверяем соотношение комнат и гостей
+roomsAndCapacity();
+
+// При активации главной метки
+mapPinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  // Активируем страницу
+  checkStatePage(true);
+
+  // Меняем координаты главной метки
+  setLocatePinMain(true);
+
+  // Добавляем метки объявлений
+  addPin(pins);
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  evt.preventDefault();
+
+  if (evt.keyCode === ENTER_KEY || evt.keyCode === SPACE_KEY) {
+    checkStatePage(true);
+  }
+});
+
+// Проверка соотношения количества комнат и мест
+adForm.addEventListener('change', roomsAndCapacity, true);
