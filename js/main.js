@@ -395,6 +395,8 @@ var renderPin = function (offer) {
     evt.preventDefault();
 
     addCard(offer);
+
+    itemPin.classList.add('map__pin--active');
   });
 
   return itemPin;
@@ -555,10 +557,10 @@ var removeCard = function () {
 
 
 // *****************************
-// Переключаем состояние страницы (активная / не активная)
+// Функции настройки страницы
 // *****************************
 
-// Проверяем состояние страницы
+// Переключаем состояние страницы (активная / не активная)
 var checkStatePage = function (statePage) {
   if (statePage) {
     map.classList.remove('map--faded');
@@ -591,10 +593,7 @@ var checkStatePage = function (statePage) {
 };
 
 
-// *****************************
-// Получаем координаты главной метки
-// *****************************
-
+// Устанавливаем координаты главной метки
 var setLocatePinMain = function (statePage) {
   var locatePinMain = {
     x: null,
@@ -615,32 +614,99 @@ var setLocatePinMain = function (statePage) {
   }
 
   // Записываем координаты в поле адрес
-  setAddressLocate(locatePinMain);
+  var address = adForm.querySelector('#address');
+  address.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
 };
 
 
-// *****************************
-// Проверка соотношения количества комнат и мест
-// *****************************
+// Соотношение типа жилья с ценой
+var setTypeHousePrice = function () {
+  var selectedTypeHouse = typeHouse.options[typeHouse.options.selectedIndex];
 
-var roomsAndCapacity = function () {
-  var countRoom = parseInt(rooms.options[rooms.selectedIndex].value, 10);
-  var countCapacity = parseInt(capacity.options[capacity.selectedIndex].value, 10);
-
-  if (countRoom < countCapacity) {
-    capacity.setCustomValidity('Выберите вариант, чтобы количество гостей не превышало количество комнат');
-  } else if (countRoom !== 100 && countCapacity === 0) {
-    capacity.setCustomValidity('Выберите вариант, чтобы количество гостей было до ' + countRoom + ' человек');
-  } else if (countRoom === 100 && countCapacity !== 0) {
-    capacity.setCustomValidity('Выберите вариант, не для гостей');
-  } else {
-    capacity.setCustomValidity('');
+  switch (selectedTypeHouse.value) {
+    case 'bungalo':
+      priceHouse.placeholder = 0;
+      priceHouse.setAttribute('min', 0);
+      break;
+    case 'flat':
+      priceHouse.placeholder = 1000;
+      priceHouse.setAttribute('min', 1000);
+      break;
+    case 'house':
+      priceHouse.placeholder = 5000;
+      priceHouse.setAttribute('min', 5000);
+      break;
+    case 'palace':
+      priceHouse.placeholder = 10000;
+      priceHouse.setAttribute('min', 10000);
+      break;
   }
 };
 
-// Устанавливает в поле адрес координаты
-var setAddressLocate = function (locatePinMain) {
-  address.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
+
+// Соотношение количества комнат с количеством мест
+var setRoomsCapacity = function () {
+  var roomsHouse = adForm.querySelector('#room_number');
+  var capacityHouse = adForm.querySelector('#capacity');
+
+  var selectedRoomsHouse = roomsHouse.options[roomsHouse.options.selectedIndex];
+
+  for (var i = 0; i < capacityHouse.options.length; i++) {
+    var optionCapacityHouse = capacityHouse.options[i];
+
+    // Выбираем максимальное количество людей под комнаты
+    if (selectedRoomsHouse.value === optionCapacityHouse.value) {
+      optionCapacityHouse.setAttribute('selected', 'selected');
+    } else if (selectedRoomsHouse.value === '100' && optionCapacityHouse.value === '0') {
+      optionCapacityHouse.setAttribute('selected', 'selected');
+    } else {
+      optionCapacityHouse.removeAttribute('selected');
+    }
+
+    // Скрываем не нужные элементы
+    if (selectedRoomsHouse.value < optionCapacityHouse.value) {
+      optionCapacityHouse.classList.add('hidden');
+    } else if (selectedRoomsHouse.value !== '100' && optionCapacityHouse.value === '0') {
+      optionCapacityHouse.classList.add('hidden');
+    } else if (selectedRoomsHouse.value === '100' && optionCapacityHouse.value !== '0') {
+      optionCapacityHouse.classList.add('hidden');
+    } else {
+      optionCapacityHouse.classList.remove('hidden');
+    }
+  }
+};
+
+// Сбрасываем время заезда и выезда
+var setTimeDefault = function () {
+  var timeInOption = timeInHouse.options;
+  var timeOutOption = timeOutHouse.options;
+
+  for (var i = 0; i < timeInOption.length; i++) {
+    timeInOption[i].removeAttribute('selected');
+  }
+
+  for (i = 0; i < timeOutHouse.length; i++) {
+    timeOutOption[i].removeAttribute('selected');
+  }
+};
+
+
+// Настройки по умолчанию
+var defaultSettingForm = function () {
+  // По умолчанию страница не активна
+  checkStatePage(false);
+
+  // Координаты главной метки по умолчанию
+  setLocatePinMain(false);
+
+  // Тип жилья и цена
+  setTypeHousePrice();
+
+  // Количество комнат и мест
+  setRoomsCapacity();
+
+  // Время приезда и отъезда
+  setTimeDefault();
 };
 
 
@@ -662,9 +728,13 @@ var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
 // Форма добавления нового объявления
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsets = adForm.querySelectorAll('fieldset');
-var address = adForm.querySelector('#address');
-var rooms = adForm.querySelector('#room_number');
-var capacity = adForm.querySelector('#capacity');
+
+// Поля формы
+var typeHouse = adForm.querySelector('#type');
+var priceHouse = adForm.querySelector('#price');
+var timeInHouse = adForm.querySelector('#timein');
+var timeOutHouse = adForm.querySelector('#timeout');
+
 
 // Клавиши
 var ENTER_KEY = 13;
@@ -677,14 +747,8 @@ var offers = generateOffer(8);
 // Создаем метки объявлений
 var pins = createPin(offers);
 
-// По умолчанию страница не активна
-checkStatePage(false);
-
-// Координаты главной метки по умолчанию
-setLocatePinMain(false);
-
-// Проверяем соотношение комнат и гостей
-roomsAndCapacity();
+// Задаем параметры страницы по умолчанию
+defaultSettingForm();
 
 // При активации главной метки
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -700,13 +764,120 @@ mapPinMain.addEventListener('mousedown', function (evt) {
   addPin(pins);
 });
 
+// Если главная метки была активирована с помощью клавиатуры
 mapPinMain.addEventListener('keydown', function (evt) {
   evt.preventDefault();
 
   if (evt.keyCode === ENTER_KEY || evt.keyCode === SPACE_KEY) {
+    // Активируем страницу
     checkStatePage(true);
+
+    // Меняем координаты главной метки
+    setLocatePinMain(true);
+
+    // Добавляем метки объявлений
+    addPin(pins);
   }
 });
 
-// Проверка соотношения количества комнат и мест
-adForm.addEventListener('change', roomsAndCapacity, true);
+
+// Валидация формы
+var validationForm = function (evt) {
+  var target = evt.target;
+  var messages = [];
+
+  var templateError = document.createDocumentFragment();
+  var errorBlock = document.createElement('div');
+
+  // Валидация заголовка объявления
+  var titleValidation = function () {
+    if (target.validity.valueMissing) {
+      messages.push('Укажите заголовок объявления');
+    } else if (target.validity.tooShort) {
+      messages.push('Заголовок объявления не должен быть меньше 30 символов');
+    } else if (target.validity.tooLong) {
+      messages.push('Заголовок объявления не должен превышать 100 символов');
+    } else if (target.validity.typeMismatch) {
+      messages.push('Введено не верное значение');
+    }
+  };
+
+  // Валидация типа и цены жилья
+  var housingTypePriceValidation = function () {
+    setTypeHousePrice();
+
+    if (target.validity.valueMissing) {
+      messages.push('Укажите цену за ночь');
+    } else if (target.validity.rangeUnderflow) {
+      messages.push('Цена за ночь не должна быть меньше ' + priceHouse.min + ' руб.');
+    } else if (target.validity.rangeOverflow) {
+      messages.push('Цена за ночь не должна быть больше 1 000 000 руб.');
+    } else if (target.validity.typeMismatch) {
+      messages.push('Введено не верное значение');
+    }
+  };
+
+  // Валидация комнат и гостей
+  var roomsCapacityValidation = function () {
+    setRoomsCapacity();
+  };
+
+  // Валидация времени заселения и выселения
+  var timeValidation = function () {
+    var timeOption = target.options;
+
+    setTimeDefault();
+
+    timeOutHouse.options[timeOption.selectedIndex].setAttribute('selected', 'selected');
+    timeInHouse.options[timeOption.selectedIndex].setAttribute('selected', 'selected');
+  };
+
+  // Добавить сообщение об ошибке
+  var addErrorMessage = function () {
+
+    errorBlock.style.color = 'red';
+    errorBlock.style.marginTop = '5px';
+
+    for (var i = 0; i < messages.length; i++) {
+      errorBlock.textContent = messages[i];
+      templateError.appendChild(errorBlock);
+    }
+
+    target.after(templateError);
+
+    target.setCustomValidity(messages);
+    target.style.border = '2px solid red';
+  };
+
+  // Валидируем поле с которым было взаимодействие
+  switch (target.name) {
+    // Поле заголовок объявления
+    case 'title':
+      titleValidation();
+      break;
+    // Поля тип и цена жилья
+    case 'type':
+    case 'price':
+      housingTypePriceValidation();
+      break;
+    // Поле количество комнат
+    case 'rooms':
+      roomsCapacityValidation();
+      break;
+    // Поля заселения и выселения
+    case 'timein':
+    case 'timeout':
+      timeValidation();
+      break;
+  }
+
+  // Если есть ошибки валидации показываем их
+  if (messages.length) {
+    addErrorMessage();
+  } else {
+    target.setCustomValidity('');
+    target.style.border = 'none';
+  }
+};
+
+adForm.addEventListener('invalid', validationForm, true);
