@@ -825,11 +825,13 @@ var validationForm = function (evt) {
   // Валидация времени заселения и выселения
   var timeValidation = function () {
     var timeOption = target.options;
+    var targetName = target.name;
 
-    setTimeDefault();
-
-    timeOutHouse.options[timeOption.selectedIndex].setAttribute('selected', 'selected');
-    timeInHouse.options[timeOption.selectedIndex].setAttribute('selected', 'selected');
+    if (targetName === 'timein') {
+      timeOutHouse.value = timeInHouse.value;
+    } else {
+      timeInHouse.value = timeOutHouse.value;
+    }
   };
 
   // Добавить сообщение об ошибке
@@ -880,4 +882,5 @@ var validationForm = function (evt) {
   }
 };
 
-adForm.addEventListener('invalid', validationForm, true);
+// adForm.addEventListener('invalid', validationForm, true);
+adForm.addEventListener('input', validationForm, true);
