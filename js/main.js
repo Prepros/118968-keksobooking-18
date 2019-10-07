@@ -491,10 +491,8 @@ var renderCard = function (offer) {
   avatar.src = offer.author.avatar;
 
   var closePopup = function () {
-    var mapPin = document.querySelector('.map__pin--active');
-
     itemCard.remove();
-    mapPin.classList.remove('map__pin--active');
+    deactivatePin();
 
     document.removeEventListener('keydown', onEscPress);
   };
@@ -540,6 +538,7 @@ var addPin = function (pins) {
 // Добавление объявления
 var addCard = function (offer) {
   removeCard();
+  deactivatePin();
 
   var fragment = document.createDocumentFragment();
 
@@ -553,11 +552,17 @@ var addCard = function (offer) {
 // Удаление объявления
 var removeCard = function () {
   var mapCard = map.querySelector('.map__card');
-  var mapPin = map.querySelector('.map__pin--active');
 
   if (mapCard) {
     mapCard.remove();
-    mapPin.classList.remove('map__pin--active');
+  }
+};
+
+var deactivatePin = function () {
+  var mapPinActive = document.querySelector('.map__pin--active');
+
+  if (mapPinActive) {
+    mapPinActive.classList.remove('map__pin--active');
   }
 };
 
@@ -740,7 +745,6 @@ var adFormFieldsets = adForm.querySelectorAll('fieldset');
 // Поля формы
 var typeHouse = adForm.querySelector('#type');
 var priceHouse = adForm.querySelector('#price');
-
 
 // Клавиши
 var ENTER_KEY = 13;
