@@ -553,9 +553,11 @@ var addCard = function (offer) {
 // Удаление объявления
 var removeCard = function () {
   var mapCard = map.querySelector('.map__card');
+  var mapPin = map.querySelector('.map__pin--active');
 
   if (mapCard) {
     mapCard.remove();
+    mapPin.classList.remove('map__pin--active');
   }
 };
 
