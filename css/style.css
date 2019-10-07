@@ -1248,3 +1248,8 @@ fieldset {
   outline: none;
   opacity: 0.6;
 }
+
+.error-validate {
+  margin-top: 5px;
+  color: red;
+}
