@@ -491,7 +491,11 @@ var renderCard = function (offer) {
   avatar.src = offer.author.avatar;
 
   var closePopup = function () {
+    var mapPin = document.querySelector('.map__pin--active');
+
     itemCard.remove();
+    mapPin.classList.remove('map__pin--active');
+
     document.removeEventListener('keydown', onEscPress);
   };
 
