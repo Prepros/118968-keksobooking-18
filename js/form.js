@@ -171,6 +171,7 @@
 
     errorBlock.textContent = errorMessage;
     element.style.border = '1px solid red';
+    element.style.boxShadow = '0 0 10px red';
   };
 
 
@@ -181,6 +182,7 @@
     if (errorBlock) {
       errorBlock.remove();
       element.style.border = 'none';
+      element.style.boxShadow = 'none';
     }
   };
 
