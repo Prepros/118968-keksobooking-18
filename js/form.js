@@ -256,6 +256,10 @@
     housingTypePriceValidation();
 
     form.removeEventListener('click', window.form.onInvalidForm);
+    form.addEventListener('change', function () {
+      titleValidation();
+      housingTypePriceValidation();
+    }, true);
   };
 
 
@@ -280,9 +284,6 @@
         setTimeInOut();
         break;
     }
-
-    titleValidation();
-    housingTypePriceValidation();
   };
 
 
