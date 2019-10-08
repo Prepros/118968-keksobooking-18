@@ -170,7 +170,6 @@
     }
 
     errorBlock.textContent = errorMessage;
-
     element.style.border = '1px solid red';
   };
 
@@ -181,6 +180,7 @@
 
     if (errorBlock) {
       errorBlock.remove();
+      element.style.border = 'none';
     }
   };
 
