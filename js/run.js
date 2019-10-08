@@ -79,5 +79,5 @@
   submitForm.addEventListener('click', window.form.onInvalidForm);
 
   // При изменении значений полей
-  form.addEventListener('change', window.form.onInputForm, true);
+  form.addEventListener('input', window.form.onInputForm, true);
 })();

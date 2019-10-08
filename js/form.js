@@ -256,7 +256,7 @@
     housingTypePriceValidation();
 
     form.removeEventListener('click', window.form.onInvalidForm);
-    form.addEventListener('change', function () {
+    form.addEventListener('input', function () {
       titleValidation();
       housingTypePriceValidation();
     }, true);
