@@ -39,6 +39,9 @@
     // Главная метка
     var mapPinMain = window.dom.map.mapPinMain;
 
+    // Высота заостренного элемента метки
+    var mapPinMainAfterHeight = window.pin.mapPinMainAfterHeight;
+
     // Координаты главной метки
     var locatePinMain = {
       x: null,
@@ -48,11 +51,8 @@
     // Если страница активна координаты от нижней стороны метки
     // Если страница не активна координаты от центра метки
     if (statePage) {
-      // Высота заостренного элемента метки
-      var pinMainDownHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
-
       locatePinMain.x = Math.floor(mapPinMain.offsetLeft + (mapPinMain.offsetWidth / 2));
-      locatePinMain.y = Math.floor(mapPinMain.offsetTop + mapPinMain.offsetHeight + pinMainDownHeight);
+      locatePinMain.y = Math.floor(mapPinMain.offsetTop + mapPinMain.offsetHeight + mapPinMainAfterHeight - 5);
     } else {
       locatePinMain.x = Math.floor(mapPinMain.offsetLeft + (mapPinMain.offsetWidth / 2));
       locatePinMain.y = Math.floor(mapPinMain.offsetTop + (mapPinMain.offsetHeight / 2));

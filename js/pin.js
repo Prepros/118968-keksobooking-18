@@ -1,6 +1,13 @@
 'use strict';
 
 (function () {
+  // Главный пин
+  var mapPinMain = window.dom.map.mapPinMain;
+
+  // Высота заостренного элемента метки
+  var mapPinMainAfterHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
+
+
   // Создание меток
   var createPin = function (offers) {
     var fragment = document.createDocumentFragment();
@@ -76,10 +83,76 @@
   };
 
 
+  // Перемещение главного пина
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+
+    // Перемещение метки
+    var onMouseMove = function (evtMove) {
+      evtMove.preventDefault();
+
+      // Смещение координат
+      var shiftCoords = {
+        x: startCoords.x - evtMove.clientX,
+        y: startCoords.y - evtMove.clientY
+      };
+
+      // Перезадаем стартовую позицию
+      startCoords.x = evtMove.clientX;
+      startCoords.y = evtMove.clientY;
+
+      // Расстояние главной метки от начала карты
+      var mapPinMainTop = mapPinMain.offsetTop - shiftCoords.y;
+      var mapPinMainLeft = mapPinMain.offsetLeft - shiftCoords.x;
+
+      // Допустимые значения для смещения главной метки по оси X
+      var shiftMapPinMainX = {
+        min: window.data.sizeMap.width.min - (mapPinMain.offsetWidth / 2),
+        max: window.data.sizeMap.width.max - (mapPinMain.offsetWidth / 2)
+      };
+
+      // Допустимые значения для смещения главной метки по оси Y
+      var shiftMapPinMainY = {
+        min: window.data.sizeMap.height.min - (mapPinMain.offsetHeight / 2),
+        max: window.data.sizeMap.height.max - mapPinMainAfterHeight
+      };
+
+      if (mapPinMainTop >= shiftMapPinMainY.min && mapPinMainTop <= shiftMapPinMainY.max) {
+        mapPinMain.style.top = mapPinMainTop + 'px';
+      }
+
+      if (mapPinMainLeft >= shiftMapPinMainX.min && mapPinMainLeft <= shiftMapPinMainX.max) {
+        mapPinMain.style.left = mapPinMainLeft + 'px';
+      }
+
+      window.form.setAddressPinMain(true);
+    };
+
+
+    // Отмена перемещения метки
+    var onMouseUp = function (evtDown) {
+      evtDown.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+
   window.pin = {
     createPin: createPin,
     addPin: addPin,
     deactivatePin: deactivatePin,
-    removePin: removePin
+    removePin: removePin,
+    mapPinMainAfterHeight: mapPinMainAfterHeight
   };
 })();
