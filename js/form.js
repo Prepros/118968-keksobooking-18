@@ -263,7 +263,7 @@
 
 
   // Корректное изменение связанных полей
-  var onInputForm = function (evt) {
+  var onChangeInput = function (evt) {
     var target = evt.target;
 
     // Валидируем поле с которым было взаимодействие
@@ -294,6 +294,6 @@
     setFormDefault: setFormDefault,
 
     onInvalidForm: onInvalidForm,
-    onInputForm: onInputForm
+    onChangeInput: onChangeInput
   };
 })();
