@@ -1,6 +1,26 @@
 'use strict';
 
 (function () {
+  // Размер карты
+  var sizeMap = {
+    width: {
+      min: 0,
+      max: window.dom.map.mapPins.offsetWidth
+    },
+    height: {
+      min: 130,
+      max: 630
+    }
+  };
+
+
+  // Размеры пина объявления
+  var sizePin = {
+    width: 50,
+    height: 70
+  };
+
+
   // Генерация чисел 01 - 08 / 10 - 18 / n0 - n8 кроме 9
   var generateNumber = function (minVal, maxVal) {
     var arrayNumbers = [];
@@ -253,25 +273,20 @@
       count = 1;
     }
 
-    // Размеры пина объявления
-    var mapPinWidth = 50;
-    var mapPinHeight = 70;
-
-    // Ширина карты
-    var widthMap = window.dom.map.mapPins.offsetWidth;
 
     // Координаты пинов
     var locations = [];
 
+    // Задаем случайниые координаты для пинов объявлений
     for (var i = 0; i < count; i++) {
       locations[i] = [];
-      locations[i]['x'] = window.util.randomVal(0, widthMap);
-      locations[i]['y'] = window.util.randomVal(130, 630);
+      locations[i]['x'] = window.util.randomVal(sizeMap.width.min, sizeMap.width.max);
+      locations[i]['y'] = window.util.randomVal(sizeMap.height.min, sizeMap.height.max);
     }
 
     // Координаты относительно нижней центральной точки
-    locations.x = Math.floor(locations.x - (mapPinWidth / 2));
-    locations.y = locations.y - mapPinHeight;
+    locations.x = Math.floor(locations.x - (sizePin.width / 2));
+    locations.y = locations.y - sizePin.height;
 
     return locations;
   };
@@ -332,6 +347,8 @@
 
 
   window.data = {
-    generateOffer: generateOffer
+    generateOffer: generateOffer,
+    sizeMap: sizeMap,
+    sizePin: sizePin
   };
 })();

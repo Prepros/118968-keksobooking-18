@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  // Главный пин
+  var mapPinMain = window.dom.map.mapPinMain;
+
+
   // Форма добавления нового объявления
   var form = window.dom.form.adForm;
   var submitForm = window.dom.form.submit;
@@ -69,8 +73,6 @@
 
       // Активация страницы
       activePage();
-
-      // window.dom.map.mapPinMain.removeEventListener('mousedown', onClickPageEnabled);
     };
 
 
@@ -84,12 +86,12 @@
       // Клавиша Space
       window.util.isSpaceEvent(evt, activePage);
 
-      window.dom.map.mapPinMain.removeEventListener('keydown', onKeydownPageEnabled);
+      mapPinMain.removeEventListener('keydown', onKeydownPageEnabled);
     };
 
 
-    window.dom.map.mapPinMain.addEventListener('mousedown', onClickPageEnabled);
-    window.dom.map.mapPinMain.addEventListener('keydown', onKeydownPageEnabled);
+    mapPinMain.addEventListener('mousedown', onClickPageEnabled);
+    mapPinMain.addEventListener('keydown', onKeydownPageEnabled);
 
 
     // 3 - Валидация формы
