@@ -36,8 +36,6 @@
 
       // Клавиша Space
       window.util.isSpaceEvent(evt, window.page.active);
-
-      mapPinMain.removeEventListener('keydown', onKeydownPageEnabled);
     };
 
 
