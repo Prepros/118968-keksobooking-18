@@ -146,6 +146,7 @@
   };
 
   window.card = {
-    addCard: addCard
+    addCard: addCard,
+    removeCard: removeCard
   };
 })();

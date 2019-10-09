@@ -13,57 +13,8 @@
 
   // Инициализация проекта
   var init = function () {
-    // Генерируем массив объявлений
-    var offers = window.data.generateOffer(8);
-
-
-    // Метки объявлений
-    var pins = null;
-
-
-    // Активация страницы
-    var activePage = function () {
-      // Активируем карту объявлений
-      window.map.mapEnabled();
-
-      // Активируем фильтр объявлений
-      window.filter.filterEnabled();
-
-      // Активируем форму
-      window.form.formEnabled();
-
-      // Меняем координаты главной метки
-      window.form.setAddressPinMain(true);
-
-      // Добавляем метки объявлений
-      window.pin.addPin(pins);
-    };
-
-
-    // Деактивация страницы
-    var deactivePage = function () {
-      // Деактивируем карту объявлений
-      window.map.mapDisabled();
-
-      // Деактивируем фильтр объявлений
-      window.filter.filterDisabled();
-
-      // Деактивируем форму
-      window.form.formDisabled();
-
-      // Устанавливаем значения полей формы поумолчанию
-      window.form.setFormDefault();
-
-      // Удаляем метки объявлений
-      window.pin.removePin();
-
-      // Создаем метки объявлений
-      pins = window.pin.createPin(offers);
-    };
-
-
     // 1 - Задаем настройки страницы по умолчанию
-    deactivePage();
+    window.page.deactive();
 
 
     // 2 - Меняем настройки страницы при активакции пина
@@ -72,7 +23,7 @@
       evt.preventDefault();
 
       // Активация страницы
-      activePage();
+      window.page.active();
     };
 
 
@@ -81,10 +32,10 @@
       evt.preventDefault();
 
       // Клавиша Enter
-      window.util.isEnterEvent(evt, activePage);
+      window.util.isEnterEvent(evt, window.page.active);
 
       // Клавиша Space
-      window.util.isSpaceEvent(evt, activePage);
+      window.util.isSpaceEvent(evt, window.page.active);
 
       mapPinMain.removeEventListener('keydown', onKeydownPageEnabled);
     };
@@ -104,7 +55,7 @@
     // Сброс формы
     resetForm.addEventListener('click', function (evt) {
       evt.preventDefault();
-      deactivePage();
+      window.page.deactive();
     });
   };
 

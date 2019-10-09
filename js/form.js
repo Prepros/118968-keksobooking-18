@@ -8,6 +8,7 @@
   var priceForm = window.dom.form.price;
   var roomsForm = window.dom.form.rooms;
   var capacityForm = window.dom.form.capacity;
+  var addressForm = window.dom.form.address;
 
 
   // Форма активна
@@ -58,9 +59,8 @@
       locatePinMain.y = Math.floor(mapPinMain.offsetTop + (mapPinMain.offsetHeight / 2));
     }
 
-    // Записываем координаты в поле адрес
-    var address = window.dom.form.address;
-    address.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
+    // Координаты метки
+    addressForm.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
   };
 
 
