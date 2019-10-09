@@ -22,13 +22,13 @@
     var itemPin = mapPin.cloneNode(true);
     var img = itemPin.querySelector('img');
 
-    var itemPinWidth = 50;
-    var itemPinHeight = 70;
+    // var itemPinWidth = 50;
+    // var itemPinHeight = 70;
 
     itemPin.setAttribute('tabindex', 0);
 
-    offer.location.x = Math.floor(offer.location.x - (itemPinWidth / 2));
-    offer.location.y = offer.location.y - itemPinHeight;
+    // offer.location.x = Math.floor(offer.location.x - (itemPinWidth / 2));
+    // offer.location.y = offer.location.y - itemPinHeight;
 
     itemPin.setAttribute('style', 'left: ' + offer.location.x + 'px; top: ' + offer.location.y + 'px;');
     img.src = offer.author.avatar;
@@ -52,6 +52,19 @@
   };
 
 
+  // Удаление меток
+  var removePin = function () {
+    var pins = document.querySelectorAll('.map__pin');
+
+    // Удаляем все пины кроме главного
+    pins.forEach(function (item) {
+      if (!item.classList.contains('map__pin--main')) {
+        item.parentNode.removeChild(item);
+      }
+    });
+  };
+
+
   // Диактивация меток
   var deactivatePin = function () {
     // Активный пин объявления
@@ -66,6 +79,7 @@
   window.pin = {
     createPin: createPin,
     addPin: addPin,
-    deactivatePin: deactivatePin
+    deactivatePin: deactivatePin,
+    removePin: removePin
   };
 })();

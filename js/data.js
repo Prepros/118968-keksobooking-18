@@ -253,15 +253,25 @@
       count = 1;
     }
 
-    var width = window.dom.map.mapPins.offsetWidth;
+    // Размеры пина объявления
+    var mapPinWidth = 50;
+    var mapPinHeight = 70;
 
+    // Ширина карты
+    var widthMap = window.dom.map.mapPins.offsetWidth;
+
+    // Координаты пинов
     var locations = [];
 
     for (var i = 0; i < count; i++) {
       locations[i] = [];
-      locations[i]['x'] = window.util.randomVal(0, width);
+      locations[i]['x'] = window.util.randomVal(0, widthMap);
       locations[i]['y'] = window.util.randomVal(130, 630);
     }
+
+    // Координаты относительно нижней центральной точки
+    locations.x = Math.floor(locations.x - (mapPinWidth / 2));
+    locations.y = locations.y - mapPinHeight;
 
     return locations;
   };

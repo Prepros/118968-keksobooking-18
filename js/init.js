@@ -4,6 +4,7 @@
   // Форма добавления нового объявления
   var form = window.dom.form.adForm;
   var submitForm = window.dom.form.submit;
+  var resetForm = window.dom.form.reset;
 
 
   // Инициализация проекта
@@ -12,16 +13,16 @@
     var offers = window.data.generateOffer(8);
 
 
-    // Создаем метки объявлений
-    var pins = window.pin.createPin(offers);
+    // Метки объявлений
+    var pins = null;
 
 
     // Активация страницы
     var activePage = function () {
-      // Активируем карту
+      // Активируем карту объявлений
       window.map.mapEnabled();
 
-      // Активируем фильтр
+      // Активируем фильтр объявлений
       window.filter.filterEnabled();
 
       // Активируем форму
@@ -35,15 +36,30 @@
     };
 
 
+    // Деактивация страницы
+    var deactivePage = function () {
+      // Деактивируем карту объявлений
+      window.map.mapDisabled();
+
+      // Деактивируем фильтр объявлений
+      window.filter.filterDisabled();
+
+      // Деактивируем форму
+      window.form.formDisabled();
+
+      // Устанавливаем значения полей формы поумолчанию
+      window.form.setFormDefault();
+
+      // Удаляем метки объявлений
+      window.pin.removePin();
+
+      // Создаем метки объявлений
+      pins = window.pin.createPin(offers);
+    };
+
+
     // 1 - Задаем настройки страницы по умолчанию
-    // Деактивируем карту объявлений
-    window.map.mapDisabled();
-
-    // Деактивируем фильтр объявлений
-    window.filter.filterDisabled();
-
-    // Устанавливаем значения полей формы поумолчанию
-    window.form.setFormDefault();
+    deactivePage();
 
 
     // 2 - Меняем настройки страницы при активакции пина
@@ -54,7 +70,7 @@
       // Активация страницы
       activePage();
 
-      window.dom.map.mapPinMain.removeEventListener('mousedown', onClickPageEnabled);
+      // window.dom.map.mapPinMain.removeEventListener('mousedown', onClickPageEnabled);
     };
 
 
@@ -82,6 +98,12 @@
 
     // При изменении значений полей
     form.addEventListener('input', window.form.onInputForm, true);
+
+    // Сброс формы
+    resetForm.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      deactivePage();
+    });
   };
 
 

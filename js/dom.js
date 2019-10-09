@@ -25,6 +25,7 @@
   var roomsHouse = adForm.querySelector('#room_number');
   var capacityHouse = adForm.querySelector('#capacity');
   var submitForm = adForm.querySelector('.ad-form__submit');
+  var resetForm = adForm.querySelector('.ad-form__reset');
 
 
   // DOM элементы карты
@@ -53,6 +54,7 @@
     rooms: roomsHouse,
     capacity: capacityHouse,
     submit: submitForm,
+    reset: resetForm,
 
     fieldsets: adFormFieldsets
   };
