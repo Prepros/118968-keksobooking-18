@@ -21,6 +21,10 @@
   };
 
 
+  // Ссылка получения данных с сервера
+  var linkData = 'https://js.dump.academy/keksobooking/data';
+
+
   // Генерация чисел 01 - 08 / 10 - 18 / n0 - n8 кроме 9
   var generateNumber = function (minVal, maxVal) {
     var arrayNumbers = [];
@@ -349,6 +353,7 @@
   window.data = {
     generateOffer: generateOffer,
     sizeMap: sizeMap,
-    sizePin: sizePin
+    sizePin: sizePin,
+    linkData: linkData
   };
 })();

@@ -2,7 +2,7 @@
 
 (function () {
   // Генерируем массив объявлений
-  var offers = window.data.generateOffer(8);
+  // var offers = window.data.generateOffer(8);
 
 
   // Метки объявлений
@@ -52,7 +52,8 @@
     window.pin.setPositionMapPinMainDefault();
 
     // Создаем метки объявлений
-    pins = window.pin.createPin(offers);
+    // pins = window.pin.createPin(offers);
+    window.backend.load(window.data.linkData, window.pin.createPin, window.util.onErrorBlock);
   };
 
 

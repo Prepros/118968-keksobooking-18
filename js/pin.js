@@ -3,6 +3,7 @@
 (function () {
   // Главный пин
   var mapPinMain = window.dom.map.mapPinMain;
+  var mapPins = window.dom.map.mapPins;
 
   // Позиция главного пина по умолчанию
   var positionMapPinMain = {
@@ -24,7 +25,9 @@
       fragment.appendChild(mapItem);
     }
 
-    return fragment;
+    mapPinMain.addEventListener('click', function () {
+      addPin(fragment);
+    });
   };
 
 
@@ -56,7 +59,9 @@
 
   // Добавление меток
   var addPin = function (pins) {
-    window.dom.map.mapPins.appendChild(pins);
+    if (pins) {
+      mapPins.appendChild(pins);
+    }
   };
 
 
