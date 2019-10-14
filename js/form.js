@@ -150,6 +150,10 @@
 
     // Синхронизируем временя заезда и временя выезда
     setTimeInOut();
+
+    // Убираем сообщения об ошибках
+    removeErrorBlock(titleForm);
+    removeErrorBlock(priceForm);
   };
 
 
@@ -249,16 +253,19 @@
   };
 
 
+  // Событие при ридактировании полей формы
+  var onInputEdit = function () {
+    titleValidation();
+    housingTypePriceValidation();
+  };
+
+
   // Валидация формы
   var onInvalidForm = function () {
     titleValidation();
     housingTypePriceValidation();
 
-    form.removeEventListener('click', window.form.onInvalidForm);
-    form.addEventListener('input', function () {
-      titleValidation();
-      housingTypePriceValidation();
-    }, true);
+    form.addEventListener('input', onInputEdit, true);
   };
 
 
@@ -294,6 +301,7 @@
     setFormDefault: setFormDefault,
 
     onInvalidForm: onInvalidForm,
-    onChangeInput: onChangeInput
+    onChangeInput: onChangeInput,
+    onInputEdit: onInputEdit
   };
 })();
