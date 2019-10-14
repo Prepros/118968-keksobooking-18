@@ -41,7 +41,7 @@
     window.pin.setPositionMapPinMainDefault();
 
     // Создаем метки объявлений
-    window.backend.load(window.data.linkData, window.pin.createPin, window.util.onErrorBlock);
+    window.backend.load(window.data.link.load, window.pin.createPin, window.util.onErrorBlock);
   };
 
 

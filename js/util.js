@@ -81,9 +81,57 @@
 
     var errorBlock = errorNode.cloneNode(true);
     var errorMessageBlock = errorBlock.querySelector('.error__message');
+    var errorButton = errorBlock.querySelector('.error__button');
 
     errorMessageBlock.innerHTML = errorMessage;
     document.body.insertAdjacentElement('afterbegin', errorBlock);
+
+    // Удаление ошибки при клике
+    var onClickRemoveError = function () {
+      errorBlock.remove();
+      errorButton.removeEventListener('click', onClickRemoveError);
+    };
+
+    // Удаление ошибки при нажатии ESC
+    var onKeydownRemoveError = function (evt) {
+      isEscEvent(evt, onClickRemoveError);
+      document.removeEventListener('keydown', onKeydownRemoveError);
+    };
+
+    // События закрытия окна с ошибкой
+    errorBlock.addEventListener('click', onClickRemoveError);
+    errorButton.addEventListener('click', onClickRemoveError);
+    document.addEventListener('keydown', onKeydownRemoveError);
+  };
+
+
+  // Добавление ошибки
+  var onSuccessBlock = function (successMessage) {
+    var template = document.querySelector('#success').content;
+    var successNode = template.querySelector('.success');
+
+    var successBlock = successNode.cloneNode(true);
+    var successMessageBlock = successBlock.querySelector('.success__message');
+
+    successMessageBlock.innerHTML = successMessage;
+    document.body.insertAdjacentElement('afterbegin', successBlock);
+
+    // Удаление ошибки при клике
+    var onClickRemoveSuccess = function () {
+      successBlock.remove();
+      window.form.onResetForm();
+    };
+
+    // Удаление ошибки при нажатии ESC
+    var onKeydownRemoveSuccess = function (evt) {
+      isEscEvent(evt, onClickRemoveSuccess);
+      document.removeEventListener('keydown', onKeydownRemoveSuccess);
+    };
+
+    // События закрытия окна с ошибкой
+    successBlock.addEventListener('click', onClickRemoveSuccess);
+    successBlock.addEventListener('click', onClickRemoveSuccess);
+    document.addEventListener('keydown', onKeydownRemoveSuccess);
   };
 
 
@@ -95,6 +143,7 @@
     randomString: randomString,
     randomVal: randomVal,
 
-    onErrorBlock: onErrorBlock
+    onErrorBlock: onErrorBlock,
+    onSuccessBlock: onSuccessBlock
   };
 })();

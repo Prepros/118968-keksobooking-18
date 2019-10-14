@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
+  var errorMessage = '';
+
+  // Загрузка данных
   var loadData = function (url, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
-    var errorMessage = '';
 
     xhr.timeout = 10000;
     xhr.open('GET', url);
@@ -56,7 +58,56 @@
     });
   };
 
+
+  // Отправка данных
+  var saveData = function (url, data, onSuccess, onError) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.timeout = 10000;
+    xhr.open('POST', url);
+    xhr.send(data);
+
+    xhr.addEventListener('load', function () {
+      errorMessage = '<br>' + xhr.status + ' ' + xhr.statusText;
+
+      switch (xhr.status) {
+        case 200:
+          onSuccess('Объяление отправлено.');
+          break;
+        case 400:
+          errorMessage = 'Неправильный запрос: ' + errorMessage;
+          onError(errorMessage);
+          throw new Error(errorMessage);
+        case 404:
+          errorMessage = 'Запрашиваемый ресурс не найден: ' + errorMessage;
+          onError(errorMessage);
+          throw new Error(errorMessage);
+        case 500:
+          errorMessage = 'Ошибка на сервере: ' + errorMessage;
+          onError(errorMessage);
+          throw new Error(errorMessage);
+        default:
+          errorMessage = 'Ошибка: ' + errorMessage;
+          onError(errorMessage);
+          throw new Error(errorMessage);
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      errorMessage = 'Не удалось получить данные';
+      onError(errorMessage);
+      throw new Error(errorMessage);
+    });
+
+    xhr.addEventListener('timeout', function () {
+      errorMessage = 'Ожидание превысило ' + (xhr.timeout / 1000) + ' секунд.';
+      onError(errorMessage);
+      throw new Error(errorMessage);
+    });
+  };
+
   window.backend = {
-    load: loadData
+    load: loadData,
+    save: saveData
   };
 })();

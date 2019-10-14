@@ -293,6 +293,14 @@
   };
 
 
+  // Сброс формы
+  var onResetForm = function () {
+    form.reset();
+    window.page.deactive();
+    form.removeEventListener('input', window.form.onInputEdit, true);
+  };
+
+
   window.form = {
     formEnabled: formEnabled,
     formDisabled: formDisabled,
@@ -302,6 +310,7 @@
 
     onInvalidForm: onInvalidForm,
     onChangeInput: onChangeInput,
-    onInputEdit: onInputEdit
+    onInputEdit: onInputEdit,
+    onResetForm: onResetForm
   };
 })();

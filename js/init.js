@@ -46,16 +46,20 @@
     // 3 - Валидация формы
     // При отправки формы
     submitForm.addEventListener('click', window.form.onInvalidForm);
+    form.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+
+      var data = new FormData(form);
+
+      // Отправка формы через ajax
+      window.backend.save(window.data.link.save, data, window.util.onSuccessBlock, window.util.onErrorBlock);
+    });
 
     // При изменении значений полей
     form.addEventListener('input', window.form.onChangeInput, true);
 
     // Сброс формы
-    resetForm.addEventListener('click', function () {
-      form.reset();
-      window.page.deactive();
-      form.removeEventListener('input', window.form.onInputEdit, true);
-    });
+    resetForm.addEventListener('click', window.form.onResetForm);
   };
 
 
