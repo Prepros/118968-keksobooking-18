@@ -72,7 +72,7 @@
 
       switch (xhr.status) {
         case 200:
-          onSuccess('Объяление отправлено.');
+          onSuccess('Объяление отправлено.<br> Для продолжения нажмите ESC <br>или левую кнопку мыши.');
           break;
         case 400:
           errorMessage = 'Неправильный запрос: ' + errorMessage;
