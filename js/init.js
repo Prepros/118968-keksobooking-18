@@ -8,6 +8,7 @@
   // Форма добавления нового объявления
   var form = window.dom.form.adForm;
   var submitForm = window.dom.form.submit;
+  var resetForm = window.dom.form.reset;
 
 
   // Инициализация проекта
@@ -50,7 +51,8 @@
     form.addEventListener('input', window.form.onChangeInput, true);
 
     // Сброс формы
-    form.addEventListener('reset', function () {
+    resetForm.addEventListener('click', function () {
+      form.reset();
       window.page.deactive();
       form.removeEventListener('input', window.form.onInputEdit, true);
     });
