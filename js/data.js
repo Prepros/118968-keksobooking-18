@@ -2,29 +2,68 @@
 
 (function () {
   // Размер карты
-  var sizeMap = {
-    width: {
-      min: 0,
-      max: window.dom.map.mapPins.offsetWidth
-    },
-    height: {
-      min: 130,
-      max: 630
-    }
+  var Map = {
+    WIDTH_MIN: 0,
+    WIDTH_MAX: window.dom.map.mapPins.offsetWidth,
+    HEIGHT_MIN: 130,
+    HEIGHT_MAX: 630
   };
 
 
   // Размеры пина объявления
-  var sizePin = {
-    width: 50,
-    height: 70
+  var Pin = {
+    WIDTH: 50,
+    HEIGHT: 70
   };
 
 
+  // Стоимость
+  var Price = {
+    MIN: 0,
+    MAX: 1000000
+  };
+
+
+  // Типы зданий и цены
+  var TypePrice = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000
+  };
+
+
+  // Комнаты и гости
+  var RoomCapacity = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
+
+
+  // Время заселения, выселения
+  var Time = [
+    '12:00',
+    '13:00',
+    '14:00'
+  ];
+
+
+  var Feature = [
+    'wifi',
+    'dishwasher',
+    'parking',
+    'washer',
+    'elevator',
+    'conditioner'
+  ];
+
+
   // Ссылка получения данных с сервера
-  var link = {
-    load: 'https://js.dump.academy/keksobooking/data',
-    save: 'https://js.dump.academy/keksobooking'
+  var Link = {
+    LOAD: 'https://js.dump.academy/keksobooking/data',
+    SAVE: 'https://js.dump.academy/keksobooking'
   };
 
 
@@ -85,7 +124,10 @@
     var address = [];
 
     for (var i = 1; i <= count; i++) {
-      address.push(window.util.randomVal(0, 600) + ', ' + window.util.randomVal(0, 600));
+      var x = window.util.randomVal(Map['WIDTH_MIN'], Map['WIDTH_MAX']);
+      var y = window.util.randomVal(Map['HEIGHT_MIN'], Map['HEIGHT_MAX']);
+
+      address.push(x + '; ' + y);
     }
 
     return address;
@@ -101,7 +143,7 @@
     var prices = [];
 
     for (var i = 1; i <= count; i++) {
-      prices.push(window.util.randomVal(5000, 100000));
+      prices.push(window.util.randomVal(Price.MIN, Price.MAX));
     }
 
     return prices;
@@ -114,12 +156,7 @@
       count = 1;
     }
 
-    var types = [
-      'palace',
-      'flat',
-      'house',
-      'bungalo'
-    ];
+    var types = Object.keys(TypePrice);
 
     var typesList = [];
 
@@ -141,7 +178,7 @@
     var guests = [];
 
     for (var i = 1; i <= count; i++) {
-      guests.push(window.util.randomVal(1, 20));
+      guests.push(window.util.randomVal(0, 3));
     }
 
     return guests;
@@ -157,7 +194,7 @@
     var rooms = [];
 
     for (var i = 1; i <= count; i++) {
-      rooms.push(window.util.randomVal(1, 10));
+      rooms.push(window.util.randomVal(1, 100));
     }
 
     return rooms;
@@ -170,16 +207,10 @@
       count = 1;
     }
 
-    var checkin = [
-      '12:00',
-      '13:00',
-      '14:00'
-    ];
-
     var checkinList = [];
 
     for (var i = 1; i <= count; i++) {
-      var randomCheckin = checkin[window.util.randomVal(0, checkin.length - 1)];
+      var randomCheckin = Time[window.util.randomVal(0, Time.length - 1)];
       checkinList.push(randomCheckin);
     }
 
@@ -193,26 +224,20 @@
       count = 1;
     }
 
-    var features = [
-      'wifi',
-      'dishwasher',
-      'parking',
-      'washer',
-      'elevator',
-      'conditioner'
-    ];
-
     var featuresList = [];
 
+    // Количсетво генераций
     for (var i = 0; i < count; i++) {
-      var featuresCount = window.util.randomVal(1, features.length);
+      var featuresCount = window.util.randomVal(1, Feature.length);
       featuresList[i] = [];
 
+      // Количество услуг
       for (var j = 0, key = 0; j < featuresCount; j++) {
-        var featuresRandom = window.util.randomVal(0, features.length - 1);
+        var featuresRandom = window.util.randomVal(0, Feature.length - 1);
 
-        var item = features[featuresRandom];
+        var item = Feature[featuresRandom];
 
+        // Если выпавшей услуши еще нет в списке добавляем
         if (featuresList[i].indexOf(item) === -1) {
           featuresList[i][key] = item;
           key++;
@@ -230,25 +255,26 @@
       count = 1;
     }
 
-    var photos = [];
-
+    // Ссылки на фотографии
+    var photoLinks = [];
     for (var i = 1; i <= 3; i++) {
-      photos.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
+      photoLinks.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
     }
 
+    // Генерируем массив для фотографий
     var photosList = [];
+    for (var j = 0; j < count; j++) {
+      var photosCount = window.util.randomVal(1, photoLinks.length);
+      photosList[j] = [];
 
-    for (i = 0; i < count; i++) {
-      var photosCount = window.util.randomVal(1, photos.length);
-      photosList[i] = [];
+      // Генерируем фотографии
+      for (var k = 0, key = 0; k < photosCount; k++) {
+        var photosRandom = window.util.randomVal(0, photoLinks.length - 1);
 
-      for (var j = 0, key = 0; j < photosCount; j++) {
-        var photosRandom = window.util.randomVal(0, photos.length - 1);
+        var item = photoLinks[photosRandom];
 
-        var item = photos[photosRandom];
-
-        if (photosList[i].indexOf(item) < 0) {
-          photosList[i][key] = item;
+        if (photosList[j].indexOf(item) < 0) {
+          photosList[j][key] = item;
           key++;
         }
       }
@@ -267,7 +293,8 @@
     var descriptions = [];
 
     for (var i = 1; i <= count; i++) {
-      descriptions.push(window.util.randomString(window.util.randomVal(100, 500)));
+      var lengthString = window.util.randomVal(100, 500);
+      descriptions.push(window.util.randomString(lengthString));
     }
 
     return descriptions;
@@ -280,20 +307,19 @@
       count = 1;
     }
 
-
     // Координаты пинов
     var locations = [];
 
     // Задаем случайниые координаты для пинов объявлений
     for (var i = 0; i < count; i++) {
       locations[i] = [];
-      locations[i]['x'] = window.util.randomVal(sizeMap.width.min, sizeMap.width.max);
-      locations[i]['y'] = window.util.randomVal(sizeMap.height.min, sizeMap.height.max);
+      locations[i]['x'] = window.util.randomVal(Map['WIDTH_MIN'], Map['WIDTH_MAX']);
+      locations[i]['y'] = window.util.randomVal(Map['HEIGHT_MIN'], Map['HEIGHT_MAX']);
     }
 
     // Координаты относительно нижней центральной точки
-    locations.x = Math.floor(locations.x - (sizePin.width / 2));
-    locations.y = locations.y - sizePin.height;
+    locations.x = Math.floor(locations.x - (Pin.WIDTH / 2));
+    locations.y = locations.y - Pin.HEIGHT;
 
     return locations;
   };
@@ -355,8 +381,8 @@
 
   window.data = {
     generateOffer: generateOffer,
-    sizeMap: sizeMap,
-    sizePin: sizePin,
-    link: link
+    sizeMap: Map,
+    sizePin: Pin,
+    link: Link
   };
 })();
