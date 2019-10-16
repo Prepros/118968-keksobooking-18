@@ -25,7 +25,7 @@
 
 
   // Типы зданий и цены
-  var TypePrice = {
+  var typePriceMap = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
@@ -34,7 +34,7 @@
 
 
   // Комнаты и гости
-  var RoomCapacity = {
+  var roomCapacityMap = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
@@ -49,7 +49,7 @@
     '14:00'
   ];
 
-
+  // Услуги
   var Feature = [
     'wifi',
     'dishwasher',
@@ -62,19 +62,27 @@
 
   // Ссылка получения данных с сервера
   var Link = {
-    LOAD: 'https://js.dump.academy/keksobooking/data',
-    SAVE: 'https://js.dump.academy/keksobooking'
+    load: 'https://js.dump.academy/keksobooking/data',
+    save: 'https://js.dump.academy/keksobooking'
   };
 
 
-  window.data = {
+  // Позиция главного пина по умолчанию
+  var LocateMainPin = {
+    x: 570,
+    y: 375
+  };
+
+
+  window.config = {
     sizeMap: Map,
     sizePin: Pin,
     sizePrice: Price,
     link: Link,
-    typePrice: TypePrice,
+    typePrice: typePriceMap,
     time: Time,
-    roomCapacity: RoomCapacity,
-    feature: Feature
+    roomCapacity: roomCapacityMap,
+    feature: Feature,
+    locateMainPin: LocateMainPin
   };
 })();
