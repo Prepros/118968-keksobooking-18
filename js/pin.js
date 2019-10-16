@@ -16,22 +16,20 @@
   var mapPinMainAfterHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
 
 
-  // Создание меток
-  var createPin = function (offers) {
+  // Добавление меток
+  var addPin = function (offers) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < offers.length; i++) {
-      var mapItem = renderPin(offers[i]);
+    offers.forEach(function (value) {
+      var mapItem = renderPin(value);
       fragment.appendChild(mapItem);
-    }
-
-    mapPinMain.addEventListener('click', function () {
-      addPin(fragment);
     });
+
+    mapPins.appendChild(fragment);
   };
 
 
-  // Отрисовка меток
+  // Создание меток
   var renderPin = function (offer) {
     var templatePin = document.querySelector('#pin').content;
     var mapPin = templatePin.querySelector('.map__pin');
@@ -54,14 +52,6 @@
     });
 
     return itemPin;
-  };
-
-
-  // Добавление меток
-  var addPin = function (pins) {
-    if (pins) {
-      mapPins.appendChild(pins);
-    }
   };
 
 
@@ -129,14 +119,14 @@
 
       // Допустимые значения для смещения главной метки по оси X
       var shiftMapPinMainX = {
-        min: window.data.sizeMap.width.min - (mapPinMain.offsetWidth / 2),
-        max: window.data.sizeMap.width.max - (mapPinMain.offsetWidth / 2)
+        min: window.config.sizeMap['WIDTH_MIN'] - (mapPinMain.offsetWidth / 2),
+        max: window.config.sizeMap['WIDTH_MAX'] - (mapPinMain.offsetWidth / 2)
       };
 
       // Допустимые значения для смещения главной метки по оси Y
       var shiftMapPinMainY = {
-        min: window.data.sizeMap.height.min - (mapPinMain.offsetHeight / 2),
-        max: window.data.sizeMap.height.max - mapPinMainAfterHeight
+        min: window.config.sizeMap['HEIGHT_MIN'] - (mapPinMain.offsetHeight / 2),
+        max: window.config.sizeMap['HEIGHT_MAX'] - mapPinMainAfterHeight
       };
 
       if (mapPinMainTop >= shiftMapPinMainY.min && mapPinMainTop <= shiftMapPinMainY.max) {
@@ -165,7 +155,6 @@
 
 
   window.pin = {
-    createPin: createPin,
     addPin: addPin,
     deactivatePin: deactivatePin,
     removePin: removePin,

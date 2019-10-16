@@ -1,6 +1,31 @@
 'use strict';
 
 (function () {
+  // Главный пин
+  var mapPinMain = window.dom.map.mapPinMain;
+
+
+  // Активируем страницу при клике мыши
+  var onClickPageEnabled = function (evt) {
+    evt.preventDefault();
+
+    // Активация страницы
+    window.page.active();
+  };
+
+
+  // Активируем страницу при нажатии клавиш
+  var onKeydownPageEnabled = function (evt) {
+    evt.preventDefault();
+
+    // Клавиша Enter
+    window.util.isEnterEvent(evt, window.page.active);
+
+    // Клавиша Space
+    window.util.isSpaceEvent(evt, window.page.active);
+  };
+
+
   // Активация страницы
   var active = function () {
     // Активируем карту объявлений
@@ -14,6 +39,13 @@
 
     // Меняем координаты главной метки
     window.form.setAddressPinMain(true);
+
+    // Загружаем объявления с сервера и добавляем их на карту
+    window.backend.load(window.config.link.load, window.pin.addPin, window.util.onErrorBlock);
+
+    // Удаляем события активации страницы
+    mapPinMain.removeEventListener('mousedown', onClickPageEnabled);
+    mapPinMain.removeEventListener('keydown', onKeydownPageEnabled);
   };
 
 
@@ -40,8 +72,9 @@
     // Возврат главного пина в исходное положение
     window.pin.setPositionMapPinMainDefault();
 
-    // Создаем метки объявлений
-    window.backend.load(window.data.link.load, window.pin.createPin, window.util.onErrorBlock);
+    // Создаем события активации страницы
+    mapPinMain.addEventListener('mousedown', onClickPageEnabled);
+    mapPinMain.addEventListener('keydown', onKeydownPageEnabled);
   };
 
 
