@@ -45,7 +45,7 @@
     var mapPinMainAfterHeight = window.pin.mapPinMainAfterHeight;
 
     // Координаты главной метки
-    var locatePinMain = window.util.cloneObj(window.config.locateMainPin);
+    var locatePinMain = window.util.cloneObj(window.assets.locateMainPin);
 
     // Если страница активна координаты от нижней стороны метки
     // Если страница не активна координаты от центра метки
@@ -71,7 +71,7 @@
     var value = selectedTypeHouse.value;
 
     // Конфигурации для поля тип жилья
-    var typePrice = window.config.typePrice;
+    var typePrice = window.assets.typePrice;
 
     // Значение конфигурации
     var typePriceValue = typePrice[value];
@@ -91,7 +91,7 @@
     var roomValue = selectedRoomsHouse.value;
 
     // Конфигурация количества комнат
-    var config = window.config.roomCapacity;
+    var config = window.assets.roomCapacity;
 
 
     // Проверяем каждое поле количество мест

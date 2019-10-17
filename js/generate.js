@@ -2,22 +2,22 @@
 
 (function () {
   // Размер карты
-  var mapData = window.config.sizeMap;
+  var mapData = window.assets.sizeMap;
 
   // Расценки
-  var priceData = window.config.sizePrice;
+  var priceData = window.assets.sizePrice;
 
   // Тип здания и цены
-  var typePriceData = window.config.typePrice;
+  var typePriceData = window.assets.typePrice;
 
   // Время заселения и выселения
-  var timesData = window.config.time;
+  var timesData = window.assets.time;
 
   // Виды услуг
-  var featuresData = window.config.feature;
+  var featuresData = window.assets.feature;
 
   // Виды услуг
-  var pinData = window.config.sizePin;
+  var pinData = window.assets.sizePin;
 
 
   // Генерация чисел 01 - 08 / 10 - 18 / n0 - n8 кроме 9

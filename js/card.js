@@ -29,7 +29,7 @@
     var photos = itemCard.querySelector('.popup__photos');
 
     // Конфигурация типа зданий
-    var configType = window.config.typeMap;
+    var configType = window.assets.typeMap;
 
     // Заголовок
     title.textContent = offer.offer.title;

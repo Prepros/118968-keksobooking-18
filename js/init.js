@@ -22,7 +22,7 @@
       var data = new FormData(form);
 
       // Отправка формы через ajax
-      window.backend.save(window.config.link.save, data, window.util.onSuccessBlock, window.util.onErrorBlock);
+      window.backend.save(window.assets.link.save, data, window.util.onSuccessBlock, window.util.onErrorBlock);
     });
 
     // Событие изменения значений полей формы

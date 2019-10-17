@@ -83,7 +83,15 @@
   };
 
 
-  window.config = {
+  // Количество выводимых данных на странице
+  var COUNT_DATA = 5;
+
+
+  // Данные с сервера
+  var data = [];
+
+
+  window.assets = {
     sizeMap: Map,
     sizePin: Pin,
     sizePrice: Price,
@@ -93,6 +101,8 @@
     roomCapacity: roomCapacityMap,
     feature: Feature,
     locateMainPin: LocateMainPin,
-    typeMap: typeMap
+    typeMap: typeMap,
+    countData: COUNT_DATA,
+    data: data
   };
 })();

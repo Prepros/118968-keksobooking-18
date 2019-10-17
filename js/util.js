@@ -164,6 +164,12 @@
   };
 
 
+  // Добавление данных
+  var setLoadData = function (data) {
+
+  };
+
+
   window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
@@ -175,6 +181,7 @@
     onErrorBlock: onErrorBlock,
     onSuccessBlock: onSuccessBlock,
 
-    cloneObj: cloneObj
+    cloneObj: cloneObj,
+    setLoadData: setLoadData
   };
 })();

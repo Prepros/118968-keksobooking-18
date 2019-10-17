@@ -74,8 +74,8 @@
 
   // Возврат главного пина в исходное положение
   var setPositionMapPinMainDefault = function () {
-    mapPinMain.style.top = window.config.locateMainPin.y + 'px';
-    mapPinMain.style.left = window.config.locateMainPin.x + 'px';
+    mapPinMain.style.top = window.assets.locateMainPin.y + 'px';
+    mapPinMain.style.left = window.assets.locateMainPin.x + 'px';
   };
 
 
@@ -109,14 +109,14 @@
 
       // Допустимые значения для смещения главной метки по оси X
       var shiftMapPinMainX = {
-        min: window.config.sizeMap['WIDTH_MIN'] - (mapPinMain.offsetWidth / 2),
-        max: window.config.sizeMap['WIDTH_MAX'] - (mapPinMain.offsetWidth / 2)
+        min: window.assets.sizeMap['WIDTH_MIN'] - (mapPinMain.offsetWidth / 2),
+        max: window.assets.sizeMap['WIDTH_MAX'] - (mapPinMain.offsetWidth / 2)
       };
 
       // Допустимые значения для смещения главной метки по оси Y
       var shiftMapPinMainY = {
-        min: window.config.sizeMap['HEIGHT_MIN'] - (mapPinMain.offsetHeight / 2),
-        max: window.config.sizeMap['HEIGHT_MAX'] - mapPinMainAfterHeight
+        min: window.assets.sizeMap['HEIGHT_MIN'] - (mapPinMain.offsetHeight / 2),
+        max: window.assets.sizeMap['HEIGHT_MAX'] - mapPinMainAfterHeight
       };
 
       // Изменение положения метки по оси Y

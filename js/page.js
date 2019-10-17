@@ -41,7 +41,7 @@
     window.form.setAddressPinMain(true);
 
     // Загружаем объявления с сервера и добавляем их на карту
-    window.backend.load(window.config.link.load, window.pin.addPin, window.util.onErrorBlock);
+    window.backend.load(window.assets.link.load, window.pin.addPin, window.util.onErrorBlock);
 
     // Удаляем события активации страницы
     mapPinMain.removeEventListener('mousedown', onClickPageEnabled);
