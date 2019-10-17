@@ -7,9 +7,11 @@
 
   // Отрисовка объявлений
   var renderCard = function (offer) {
+    // Шаблон карточки товара
     var templateCard = document.querySelector('#card').content;
     var card = templateCard.querySelector('.map__card');
 
+    // Нода карточки товара
     var itemCard = card.cloneNode(true);
     var closeButton = itemCard.querySelector('.popup__close');
     var title = itemCard.querySelector('.popup__title');
@@ -26,6 +28,9 @@
     var avatar = itemCard.querySelector('.popup__avatar');
     var photos = itemCard.querySelector('.popup__photos');
 
+    // Конфигурация типа зданий
+    var configType = window.config.typeMap;
+
     // Заголовок
     title.textContent = offer.offer.title;
 
@@ -36,20 +41,7 @@
     price.textContent = offer.offer.price + '₽/ночь';
 
     // Тип здания
-    switch (offer.offer.type) {
-      case 'flat':
-        type.textContent = 'Квартира';
-        break;
-      case 'bungalo':
-        type.textContent = 'Бунгало';
-        break;
-      case 'house':
-        type.textContent = 'Дом';
-        break;
-      case 'palace':
-        type.textContent = 'Дворец';
-        break;
-    }
+    type.textContent = configType[offer.offer.type];
 
     // Количество комнат и гостей
     roomsGuest.textContent = offer.offer.rooms + ' комнаты для ' + offer.offer.guests + ' гостей';
@@ -73,33 +65,35 @@
     // Описание
     description.textContent = offer.offer.description;
 
+    // Фотографии
     // Удаляем дочерние элементы
     while (photos.firstChild) {
       photos.removeChild(photos.firstChild);
     }
 
+    // Добавляем фотографии
     var photosFragment = document.createDocumentFragment();
-
-    for (i = 0; i < offer.offer.photos.length; i++) {
+    for (var k = 0; k < offer.offer.photos.length; k++) {
       var photoItem = document.createElement('img');
       photoItem.classList.add('popup__photo');
-      photoItem.src = offer.offer.photos[i];
+      photoItem.src = offer.offer.photos[k];
       photoItem.width = 45;
       photoItem.height = 40;
       photoItem.alt = offer.offer.title;
       photosFragment.appendChild(photoItem);
     }
-
     photos.appendChild(photosFragment);
 
     // Аватар
     avatar.src = offer.author.avatar;
+
 
     // Закрытие через ESC
     var onEscPress = function (evt) {
       window.util.isEscEvent(evt, closePopup);
       document.removeEventListener('keydown', onEscPress);
     };
+
 
     // Закрытие карточки объявления
     var closePopup = function () {

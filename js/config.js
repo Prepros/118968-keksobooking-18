@@ -33,6 +33,15 @@
   };
 
 
+  // Тип здания
+  var typeMap = {
+    flat: 'Квартира',
+    bungalo: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец',
+  };
+
+
   // Комнаты и гости
   var roomCapacityMap = {
     '1': ['1'],
@@ -83,6 +92,7 @@
     time: Time,
     roomCapacity: roomCapacityMap,
     feature: Feature,
-    locateMainPin: LocateMainPin
+    locateMainPin: LocateMainPin,
+    typeMap: typeMap
   };
 })();
