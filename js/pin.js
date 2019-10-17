@@ -6,11 +6,7 @@
   var mapPins = window.dom.map.mapPins;
 
   // Позиция главного пина по умолчанию
-  var positionMapPinMain = {
-    x: 570,
-    y: 375
-  };
-
+  var locateMainPin = window.config.locateMainPin;
 
   // Высота заостренного элемента метки
   var mapPinMainAfterHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
@@ -81,10 +77,10 @@
 
   // Возврат главного пина в исходное положение
   var setPositionMapPinMainDefault = function () {
-    mapPinMain.style.top = positionMapPinMain.y + 'px';
-    mapPinMain.style.left = positionMapPinMain.x + 'px';
+    mapPinMain.style.top = locateMainPin.y + 'px';
+    mapPinMain.style.left = locateMainPin.x + 'px';
 
-    // Устанавливаем координаты главной метки по умолчанию
+    // Описываем координаты главной метки в поле адрес
     window.form.setAddressPinMain();
   };
 
@@ -129,14 +125,17 @@
         max: window.config.sizeMap['HEIGHT_MAX'] - mapPinMainAfterHeight
       };
 
+      // Изменение положения метки по оси Y
       if (mapPinMainTop >= shiftMapPinMainY.min && mapPinMainTop <= shiftMapPinMainY.max) {
         mapPinMain.style.top = mapPinMainTop + 'px';
       }
 
+      // Изменение положения метки по оси X
       if (mapPinMainLeft >= shiftMapPinMainX.min && mapPinMainLeft <= shiftMapPinMainX.max) {
         mapPinMain.style.left = mapPinMainLeft + 'px';
       }
 
+      // Описываем координаты главной метки в поле адрес
       window.form.setAddressPinMain(true);
     };
 
