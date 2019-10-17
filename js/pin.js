@@ -3,6 +3,14 @@
 (function () {
   // Главный пин
   var mapPinMain = window.dom.map.mapPinMain;
+  var mapPins = window.dom.map.mapPins;
+
+  // Позиция главного пина по умолчанию
+  var positionMapPinMain = {
+    x: 570,
+    y: 375
+  };
+
 
   // Высота заостренного элемента метки
   var mapPinMainAfterHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
@@ -17,7 +25,9 @@
       fragment.appendChild(mapItem);
     }
 
-    return fragment;
+    mapPinMain.addEventListener('click', function () {
+      addPin(fragment);
+    });
   };
 
 
@@ -29,13 +39,7 @@
     var itemPin = mapPin.cloneNode(true);
     var img = itemPin.querySelector('img');
 
-    // var itemPinWidth = 50;
-    // var itemPinHeight = 70;
-
     itemPin.setAttribute('tabindex', 0);
-
-    // offer.location.x = Math.floor(offer.location.x - (itemPinWidth / 2));
-    // offer.location.y = offer.location.y - itemPinHeight;
 
     itemPin.setAttribute('style', 'left: ' + offer.location.x + 'px; top: ' + offer.location.y + 'px;');
     img.src = offer.author.avatar;
@@ -55,7 +59,9 @@
 
   // Добавление меток
   var addPin = function (pins) {
-    window.dom.map.mapPins.appendChild(pins);
+    if (pins) {
+      mapPins.appendChild(pins);
+    }
   };
 
 
@@ -80,6 +86,16 @@
     if (mapPinActive) {
       mapPinActive.classList.remove('map__pin--active');
     }
+  };
+
+
+  // Возврат главного пина в исходное положение
+  var setPositionMapPinMainDefault = function () {
+    mapPinMain.style.top = positionMapPinMain.y + 'px';
+    mapPinMain.style.left = positionMapPinMain.x + 'px';
+
+    // Устанавливаем координаты главной метки по умолчанию
+    window.form.setAddressPinMain();
   };
 
 
@@ -153,6 +169,7 @@
     addPin: addPin,
     deactivatePin: deactivatePin,
     removePin: removePin,
-    mapPinMainAfterHeight: mapPinMainAfterHeight
+    mapPinMainAfterHeight: mapPinMainAfterHeight,
+    setPositionMapPinMainDefault: setPositionMapPinMainDefault
   };
 })();

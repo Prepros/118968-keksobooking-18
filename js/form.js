@@ -8,6 +8,7 @@
   var priceForm = window.dom.form.price;
   var roomsForm = window.dom.form.rooms;
   var capacityForm = window.dom.form.capacity;
+  var addressForm = window.dom.form.address;
 
 
   // Форма активна
@@ -58,9 +59,8 @@
       locatePinMain.y = Math.floor(mapPinMain.offsetTop + (mapPinMain.offsetHeight / 2));
     }
 
-    // Записываем координаты в поле адрес
-    var address = window.dom.form.address;
-    address.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
+    // Координаты метки
+    addressForm.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
   };
 
 
@@ -150,6 +150,10 @@
 
     // Синхронизируем временя заезда и временя выезда
     setTimeInOut();
+
+    // Убираем сообщения об ошибках
+    removeErrorBlock(titleForm);
+    removeErrorBlock(priceForm);
   };
 
 
@@ -249,21 +253,24 @@
   };
 
 
+  // Событие при ридактировании полей формы
+  var onInputEdit = function () {
+    titleValidation();
+    housingTypePriceValidation();
+  };
+
+
   // Валидация формы
   var onInvalidForm = function () {
     titleValidation();
     housingTypePriceValidation();
 
-    form.removeEventListener('click', window.form.onInvalidForm);
-    form.addEventListener('input', function () {
-      titleValidation();
-      housingTypePriceValidation();
-    }, true);
+    form.addEventListener('input', onInputEdit, true);
   };
 
 
   // Корректное изменение связанных полей
-  var onInputForm = function (evt) {
+  var onChangeInput = function (evt) {
     var target = evt.target;
 
     // Валидируем поле с которым было взаимодействие
@@ -294,6 +301,7 @@
     setFormDefault: setFormDefault,
 
     onInvalidForm: onInvalidForm,
-    onInputForm: onInputForm
+    onChangeInput: onChangeInput,
+    onInputEdit: onInputEdit
   };
 })();

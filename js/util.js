@@ -74,12 +74,27 @@
   };
 
 
+  // Добавление ошибки
+  var onErrorBlock = function (errorMessage) {
+    var template = document.querySelector('#error').content;
+    var errorNode = template.querySelector('.error');
+
+    var errorBlock = errorNode.cloneNode(true);
+    var errorMessageBlock = errorBlock.querySelector('.error__message');
+
+    errorMessageBlock.innerHTML = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', errorBlock);
+  };
+
+
   window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
     isSpaceEvent: isSpaceEvent,
 
     randomString: randomString,
-    randomVal: randomVal
+    randomVal: randomVal,
+
+    onErrorBlock: onErrorBlock
   };
 })();
