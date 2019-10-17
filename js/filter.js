@@ -6,25 +6,25 @@
 
   // Фильтр активен
   var filterEnabled = function () {
-    for (var i = 0; i < selects.length; i++) {
-      selects[i].removeAttribute('disabled');
-    }
+    selects.forEach(function (value) {
+      value.removeAttribute('disabled');
+    });
 
-    for (i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].removeAttribute('disabled');
-    }
+    fieldsets.forEach(function (value) {
+      value.removeAttribute('disabled');
+    });
   };
 
 
   // Фильтр активен
   var filterDisabled = function () {
-    for (var i = 0; i < selects.length; i++) {
-      selects[i].setAttribute('disabled', true);
-    }
+    selects.forEach(function (value) {
+      value.setAttribute('disabled', true);
+    });
 
-    for (i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].setAttribute('disabled', true);
-    }
+    fieldsets.forEach(function (value) {
+      value.setAttribute('disabled', true);
+    });
   };
 
 
