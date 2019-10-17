@@ -145,11 +145,16 @@
     var onClickRemoveSuccess = function () {
       successBlock.remove();
       window.form.onResetForm();
+
+      successBlock.removeEventListener('click', onClickRemoveSuccess);
+      document.removeEventListener('keydown', onKeydownRemoveSuccess);
     };
 
     // Удаление уведомления об успехе при нажатии ESC
     var onKeydownRemoveSuccess = function (evt) {
       isEscEvent(evt, onClickRemoveSuccess);
+
+      successBlock.removeEventListener('click', onClickRemoveSuccess);
       document.removeEventListener('keydown', onKeydownRemoveSuccess);
     };
 
