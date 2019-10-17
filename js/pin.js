@@ -5,9 +5,6 @@
   var mapPinMain = window.dom.map.mapPinMain;
   var mapPins = window.dom.map.mapPins;
 
-  // Позиция главного пина по умолчанию
-  var locateMainPin = window.config.locateMainPin;
-
   // Высота заостренного элемента метки
   var mapPinMainAfterHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
 
