@@ -51,6 +51,9 @@
 
   // Деактивация страницы
   var deactive = function () {
+    // Возврат главного пина в исходное положение
+    window.pin.setPositionMapPinMainDefault();
+
     // Деактивируем карту объявлений
     window.map.mapDisabled();
 
@@ -68,9 +71,6 @@
 
     // Удаляем карточки объявлений
     window.card.removeCard();
-
-    // Возврат главного пина в исходное положение
-    window.pin.setPositionMapPinMainDefault();
 
     // Создаем события активации страницы
     mapPinMain.addEventListener('mousedown', onClickPageEnabled);

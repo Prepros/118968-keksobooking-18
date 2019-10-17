@@ -77,6 +77,18 @@
   };
 
 
+  // Клонирование объектов
+  var cloneObj = function (obj) {
+    var clone = {};
+
+    for (var i = 0; i < obj.length; i++) {
+      clone[i] = obj[i];
+    }
+
+    return clone;
+  };
+
+
   // Событие добавления ошибки
   var onErrorBlock = function (errorMessage) {
     // Шаблон с выводом ошибок
@@ -156,6 +168,8 @@
     randomVal: randomVal,
 
     onErrorBlock: onErrorBlock,
-    onSuccessBlock: onSuccessBlock
+    onSuccessBlock: onSuccessBlock,
+
+    cloneObj: cloneObj
   };
 })();

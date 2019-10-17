@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  // DOM элементы формы
   var form = window.dom.form.adForm;
   var fieldsetsForm = window.dom.form.fieldsets;
   var titleForm = window.dom.form.title;
@@ -11,31 +12,31 @@
   var addressForm = window.dom.form.address;
 
 
-  // Форма активна
+  // Активируем форму
   var formEnabled = function () {
     if (form.classList.contains('ad-form--disabled')) {
       form.classList.remove('ad-form--disabled');
     }
 
-    for (var i = 0; i < fieldsetsForm.length; i++) {
-      fieldsetsForm[i].removeAttribute('disabled');
-    }
+    fieldsetsForm.forEach(function (value) {
+      value.removeAttribute('disabled');
+    });
   };
 
 
-  // Форма не активна
+  // Дизактивируем форму
   var formDisabled = function () {
     if (!form.classList.contains('ad-form--disabled')) {
       form.classList.add('ad-form--disabled');
     }
 
-    for (var i = 0; i < fieldsetsForm.length; i++) {
-      fieldsetsForm[i].setAttribute('disabled', true);
-    }
+    fieldsetsForm.forEach(function (value) {
+      value.setAttribute('disabled', true);
+    });
   };
 
 
-  // Устанавливаем координаты главной метки
+  // Устанавливаем координаты главной метки  поле адрес
   var setAddressPinMain = function (statePage) {
     // Главная метка
     var mapPinMain = window.dom.map.mapPinMain;
@@ -44,10 +45,7 @@
     var mapPinMainAfterHeight = window.pin.mapPinMainAfterHeight;
 
     // Координаты главной метки
-    var locatePinMain = {
-      x: null,
-      y: null
-    };
+    var locatePinMain = window.util.cloneObj(window.config.locateMainPin);
 
     // Если страница активна координаты от нижней стороны метки
     // Если страница не активна координаты от центра метки
@@ -66,56 +64,49 @@
 
   // Соотношение типа жилья с ценой
   var setTypeHousePrice = function () {
+    // Поле тип жилья
     var selectedTypeHouse = typeForm.options[typeForm.options.selectedIndex];
 
-    switch (selectedTypeHouse.value) {
-      case 'bungalo':
-        priceForm.placeholder = 0;
-        priceForm.setAttribute('min', 0);
-        break;
-      case 'flat':
-        priceForm.placeholder = 1000;
-        priceForm.setAttribute('min', 1000);
-        break;
-      case 'house':
-        priceForm.placeholder = 5000;
-        priceForm.setAttribute('min', 5000);
-        break;
-      case 'palace':
-        priceForm.placeholder = 10000;
-        priceForm.setAttribute('min', 10000);
-        break;
-    }
+    // Значения поля
+    var value = selectedTypeHouse.value;
+
+    // Конфигурации для поля тип жилья
+    var typePrice = window.config.typePrice;
+
+    // Значение конфигурации
+    var typePriceValue = typePrice[value];
+
+    // Устанавливаем значения у поля с ценой
+    priceForm.placeholder = typePriceValue;
+    priceForm.setAttribute('min', typePriceValue);
   };
 
 
   // Соотношение количества комнат с количеством мест
   var setRoomsCapacity = function () {
+    // Поле количество комнат
     var selectedRoomsHouse = roomsForm.options[roomsForm.options.selectedIndex];
 
-    for (var i = 0; i < capacityForm.options.length; i++) {
-      var optionCapacityHouse = capacityForm.options[i];
+    // Количество комнат
+    var roomValue = selectedRoomsHouse.value;
 
-      // Выбираем максимальное количество людей под комнаты
-      if (selectedRoomsHouse.value === optionCapacityHouse.value) {
-        optionCapacityHouse.setAttribute('selected', 'selected');
-      } else if (selectedRoomsHouse.value === '100' && optionCapacityHouse.value === '0') {
-        optionCapacityHouse.setAttribute('selected', 'selected');
-      } else {
-        optionCapacityHouse.removeAttribute('selected');
-      }
+    // Конфигурация количества комнат
+    var config = window.config.roomCapacity;
 
-      // Скрываем не нужные элементы
-      if (selectedRoomsHouse.value < optionCapacityHouse.value) {
-        optionCapacityHouse.classList.add('hidden');
-      } else if (selectedRoomsHouse.value !== '100' && optionCapacityHouse.value === '0') {
-        optionCapacityHouse.classList.add('hidden');
-      } else if (selectedRoomsHouse.value === '100' && optionCapacityHouse.value !== '0') {
-        optionCapacityHouse.classList.add('hidden');
+
+    // Проверяем каждое поле количество мест
+    [].map.call(capacityForm, function (capacity) {
+      var capacityValue = capacity.value;
+
+      // Если количество мест удовлетворяет конфигурации, то оставляем
+      if (config[roomValue].includes(capacityValue)) {
+        capacity.setAttribute('selected', 'selected');
+        capacity.classList.remove('hidden');
       } else {
-        optionCapacityHouse.classList.remove('hidden');
+        capacity.removeAttribute('selected');
+        capacity.classList.add('hidden');
       }
-    }
+    });
   };
 
 
@@ -159,8 +150,10 @@
 
   // Добавить сообщение об ошибки
   var addErrorBlock = function (element, errorMessage) {
+    // DOM элемент блока с ошибкой
     var errorBlock = document.querySelector('#' + element.id + '+ .error-validate');
 
+    // Если блока не существует создаем его
     if (!errorBlock) {
       var templateError = document.createDocumentFragment();
       errorBlock = document.createElement('div');
@@ -178,6 +171,7 @@
 
   // Убрать сообщение об ошибки
   var removeErrorBlock = function (element) {
+    // DOM элемент блока с ошибкой
     var errorBlock = document.querySelector('#' + element.id + '+ .error-validate');
 
     if (errorBlock) {
@@ -196,6 +190,7 @@
 
     var message = '';
 
+    // Валидируем данные
     if (!titleData) {
       message = 'Укажите заголовок объявления';
     } else if (titleData.length < 30) {
@@ -204,16 +199,17 @@
       message = 'Заголовок объявления не должен превышать 100 символов';
     }
 
+    // Добавляем сообщение об ошибке
     if (message) {
       titleForm.setCustomValidity(message);
       removeErrorBlock(titleForm);
       addErrorBlock(titleForm, message);
 
       return false;
-    } else {
-      titleForm.setCustomValidity('');
-      removeErrorBlock(titleForm);
     }
+
+    titleForm.setCustomValidity('');
+    removeErrorBlock(titleForm);
 
     return true;
   };
@@ -231,6 +227,7 @@
     var priceMinNum = parseInt(priceForm.min, 10);
     var priceMaxNum = parseInt(priceForm.max, 10);
 
+    // Валидируем данные
     if (!priceData) {
       message = 'Укажите цену за ночь';
     } else if (priceDataNum < priceMinNum) {
@@ -239,21 +236,22 @@
       message = 'Цена за ночь не должна быть больше ' + priceMaxNum + ' руб.';
     }
 
+    // Добавляем сообщение об ошибке
     if (message) {
       priceForm.setCustomValidity(message);
       addErrorBlock(priceForm, message);
 
       return false;
-    } else {
-      priceForm.setCustomValidity('');
-      removeErrorBlock(priceForm);
     }
+
+    priceForm.setCustomValidity('');
+    removeErrorBlock(priceForm);
 
     return true;
   };
 
 
-  // Событие при ридактировании полей формы
+  // Событие при редактировании полей формы
   var onInputEdit = function () {
     titleValidation();
     housingTypePriceValidation();
@@ -262,8 +260,7 @@
 
   // Валидация формы
   var onInvalidForm = function () {
-    titleValidation();
-    housingTypePriceValidation();
+    onInputEdit();
 
     form.addEventListener('input', onInputEdit, true);
   };
@@ -280,11 +277,11 @@
       case 'price':
         setTypeHousePrice();
         break;
-        // Поле количество комнат
+      // Поле количество комнат
       case 'rooms':
         setRoomsCapacity();
         break;
-        // Поля заселения и выселения
+      // Поля заселения и выселения
       case 'timein':
       case 'timeout':
         setTimeInOut();

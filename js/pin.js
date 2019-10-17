@@ -77,11 +77,8 @@
 
   // Возврат главного пина в исходное положение
   var setPositionMapPinMainDefault = function () {
-    mapPinMain.style.top = locateMainPin.y + 'px';
-    mapPinMain.style.left = locateMainPin.x + 'px';
-
-    // Описываем координаты главной метки в поле адрес
-    window.form.setAddressPinMain();
+    mapPinMain.style.top = window.config.locateMainPin.y + 'px';
+    mapPinMain.style.left = window.config.locateMainPin.x + 'px';
   };
 
 
