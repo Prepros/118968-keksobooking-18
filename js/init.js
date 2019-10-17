@@ -12,7 +12,6 @@
     // Деактивируем страницу
     window.page.deactive();
 
-
     // Валидация формы
     submitForm.addEventListener('click', window.form.onInvalidForm);
 
