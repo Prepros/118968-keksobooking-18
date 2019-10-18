@@ -119,8 +119,8 @@
     return data;
   };
 
-
-  form.addEventListener('change', function () {
+  //
+  var onFilterData = window.debounce(function () {
     // Удаляем страные пины
     window.pin.removePin();
 
@@ -140,7 +140,10 @@
       // Выводим данные
       window.pin.addPin(data);
     });
-  }, true);
+  });
+
+
+  form.addEventListener('change', onFilterData, true);
 
   window.filter = {
     filterEnabled: filterEnabled,
