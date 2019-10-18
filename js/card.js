@@ -49,18 +49,30 @@
     // Время заезда и выезда
     checkInOut.textContent = 'Заезд после ' + offer.offer.checkin + ', выезд до ' + offer.offer.checkout;
 
-    // Услуги
-    for (var i = 0; i < featureItem.length; i++) {
-      var feature = featureItem[i];
+    // Конвертируем коллекцию услуг в массив
+    featureItem = [].map.call(featureItem, function (item) {
+      return item;
+    });
 
-      for (var j = 0; j < offer.offer.features.length; j++) {
-        var featureMode = 'popup__feature--' + offer.offer.features[j];
+    // Выбираем активные услуги у объявления
+    featureItem = offer.offer.features.map(function (feature) {
+      return featureItem.filter(function (value) {
+        var attr = value.getAttribute('data-feature');
+        return attr === feature;
+      })[0];
+    });
 
-        if (!feature.classList.contains(featureMode)) {
-          feature.classList.toggle('hidden');
-        }
-      }
+    // Очищаем все услуги
+    while (featureList.firstChild) {
+      featureList.removeChild(featureList.firstChild);
     }
+
+    // Добавляем активные услуги
+    var fragmentList = document.createDocumentFragment();
+    featureItem.forEach(function (val) {
+      fragmentList.appendChild(val);
+    });
+    featureList.appendChild(fragmentList);
 
     // Описание
     description.textContent = offer.offer.description;

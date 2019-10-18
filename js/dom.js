@@ -12,6 +12,12 @@
   var mapFilterSelects = mapFilter.querySelectorAll('select');
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
 
+  var filterType = mapFilter.querySelector('#housing-type');
+  var filterPrice = mapFilter.querySelector('#housing-price');
+  var filterRooms = mapFilter.querySelector('#housing-rooms');
+  var filterGuests = mapFilter.querySelector('#housing-guests');
+  var filterFeature = mapFilter.querySelector('#housing-features');
+
   // DOM элементы форма добавления нового объявления
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
@@ -40,7 +46,13 @@
     filterContainer: mapFilterContainer,
     form: mapFilter,
     selects: mapFilterSelects,
-    fieldsets: mapFilterFieldsets
+    fieldsets: mapFilterFieldsets,
+
+    type: filterType,
+    price: filterPrice,
+    rooms: filterRooms,
+    guests: filterGuests,
+    feature: filterFeature
   };
 
 

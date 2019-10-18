@@ -84,7 +84,7 @@
 
 
   // Количество выводимых данных на странице
-  var COUNT_DATA = 2;
+  var COUNT_DATA = 5;
 
 
   // Данные с сервера
@@ -110,8 +110,17 @@
   var filterPriceMap = {
     low: [0, 10000],
     middle: [10000, 50000],
-    hight: [50000, 1000000],
+    high: [50000, 1000000],
+    any: [0, 1000000]
+  };
 
+  // Поля фильтрации
+  var filterMap = {
+    type: window.dom.filter.type,
+    price: window.dom.filter.price,
+    rooms: window.dom.filter.rooms,
+    guests: window.dom.filter.guests,
+    feature: window.dom.filter.feature
   };
 
   window.assets = {
@@ -130,6 +139,7 @@
     errorCode: ErrorCodeMap,
     responseType: RESPONSE_TYPE,
     successCode: SUCCESS_CODE,
-    filterPrice: filterPriceMap
+    filterPrice: filterPriceMap,
+    filter: filterMap
   };
 })();

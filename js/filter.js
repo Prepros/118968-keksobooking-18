@@ -43,19 +43,84 @@
   };
 
 
-  // Фильтрация по типу жилья
-  var filterTypeHouse = function () {
-    
+  // Фильтрация
+  var filterItem = function (input, value) {
+    var valueCheck = window.assets.filter[input].value;
+
+    return value.offer[input].toString() === valueCheck || valueCheck === 'any';
   };
 
 
-  form.addEventListener('change', function (evt) {
-    // Выбранное поле
-    var target = evt.target;
+  // Фильтрация по типу жилья
+  var filterTypeHouse = function (data) {
+    data = data.filter(function (value) {
+      return filterItem('type', value);
+    });
 
-    // Значение выбранного поля
-    var option = target.value;
+    return data;
+  };
 
+
+  // Фильтрация по цене
+  var filterPrice = function (input, data) {
+    var valueCheck = window.assets.filter[input].value;
+
+    var priceMin = window.assets.filterPrice[valueCheck][0];
+    var priceMax = window.assets.filterPrice[valueCheck][1];
+
+    data = data.filter(function (value) {
+      return value.offer.price >= priceMin && value.offer.price <= priceMax || valueCheck === 'any';
+    });
+
+    return data;
+  };
+
+
+  // Фильтрация по комнатам
+  var filterRoom = function (data) {
+    data = data.filter(function (value) {
+      return filterItem('rooms', value);
+    });
+
+    return data;
+  };
+
+
+  // Фильтрация по гостям
+  var filterGuest = function (data) {
+    data = data.filter(function (value) {
+      return filterItem('guests', value);
+    });
+
+    return data;
+  };
+
+  // Фильтрация по услугам
+  var filterFeature = function (data) {
+    // Все отмеченные услуги
+    var valueCheck = window.assets.filter['feature'].querySelectorAll('input:checked');
+
+    // Превращаем коллекцию в массив
+    valueCheck = [].map.call(valueCheck, function (item) {
+      return item;
+    });
+
+    // Фильтруем
+    data = data.filter(function (value) {
+      // Услуги в объявлении
+      var offerFeatures = value.offer.features;
+
+      // Возвращаем отмеченные услуг содержащиеся в объявлении
+      return valueCheck.every(function (checkFeature) {
+        return offerFeatures.includes(checkFeature.value);
+      });
+    });
+
+    return data;
+  };
+
+
+  form.addEventListener('change', function () {
     // Удаляем страные пины
     window.pin.removePin();
 
@@ -63,21 +128,16 @@
     window.backend.loadData(function (xhr) {
       var data = xhr.response;
 
-      data = data.filter(function (value) {
-        return value.offer.type === option;
-      });
+      data = filterTypeHouse(data);
+      data = filterPrice('price', data);
+      data = filterRoom(data);
+      data = filterGuest(data);
+      data = filterFeature(data);
 
-      // filterData = data.filter(function (value) {
-      //   return value.offer.price === option;
-      // });
-
-
-
-
-
+      // Фильтрация по количеству
       data = filterCountData(data);
 
-
+      // Выводим данные
       window.pin.addPin(data);
     });
   }, true);

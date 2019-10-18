@@ -43,8 +43,9 @@
     // Загружаем объявления с сервера
     window.backend.loadData(function (xhr) {
       var data = xhr.response;
+
       // Фильтруем количество данных
-      var data = window.filter.filterCountData(data);
+      data = window.filter.filterCountData(data);
 
       // Добавляем пины
       window.pin.addPin(data);
