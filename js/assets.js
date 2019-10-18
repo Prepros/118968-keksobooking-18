@@ -84,12 +84,35 @@
 
 
   // Количество выводимых данных на странице
-  var COUNT_DATA = 5;
+  var COUNT_DATA = 2;
 
 
   // Данные с сервера
   var data = [];
 
+
+  // Коды ошибки
+  var ErrorCodeMap = {
+    400: 'Не правильный запрос',
+    404: 'Запрашиваемый ресурс не найден',
+    405: 'Метод не разрешен',
+    500: 'Ошибка на сервере'
+  };
+
+  var SUCCESS_CODE = 200;
+
+
+  // Тип данных по умолчанию
+  var RESPONSE_TYPE = 'json';
+
+
+  // Фильтрация по цене
+  var filterPriceMap = {
+    low: [0, 10000],
+    middle: [10000, 50000],
+    hight: [50000, 1000000],
+
+  };
 
   window.assets = {
     sizeMap: Map,
@@ -103,6 +126,10 @@
     locateMainPin: LocateMainPin,
     typeMap: typeMap,
     countData: COUNT_DATA,
-    data: data
+    data: data,
+    errorCode: ErrorCodeMap,
+    responseType: RESPONSE_TYPE,
+    successCode: SUCCESS_CODE,
+    filterPrice: filterPriceMap
   };
 })();

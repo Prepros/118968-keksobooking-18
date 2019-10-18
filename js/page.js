@@ -40,8 +40,15 @@
     // Меняем координаты главной метки
     window.form.setAddressPinMain(true);
 
-    // Загружаем объявления с сервера и добавляем их на карту
-    window.backend.load(window.assets.link.load, window.pin.addPin, window.util.onErrorBlock);
+    // Загружаем объявления с сервера
+    window.backend.loadData(function (xhr) {
+      var data = xhr.response;
+      // Фильтруем количество данных
+      var data = window.filter.filterCountData(data);
+
+      // Добавляем пины
+      window.pin.addPin(data);
+    });
 
     // Удаляем события активации страницы
     mapPinMain.removeEventListener('mousedown', onClickPageEnabled);

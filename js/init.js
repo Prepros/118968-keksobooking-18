@@ -21,8 +21,14 @@
 
       var data = new FormData(form);
 
+      var callback = {
+        success: window.notification.success,
+        error: window.notification.error,
+        successText: 'Объявление успешно добавилось'
+      };
+
       // Отправка формы через ajax
-      window.backend.save(window.assets.link.save, data, window.util.onSuccessBlock, window.util.onErrorBlock);
+      window.backend.request('POST', window.assets.link.save, callback, data);
     });
 
     // Событие изменения значений полей формы
