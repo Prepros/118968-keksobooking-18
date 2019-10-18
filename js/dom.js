@@ -38,6 +38,7 @@
   // DOM элементы фильтра
   var Filter = {
     filterContainer: mapFilterContainer,
+    form: mapFilter,
     selects: mapFilterSelects,
     fieldsets: mapFilterFieldsets
   };
