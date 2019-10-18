@@ -89,12 +89,6 @@
   };
 
 
-  // Добавление данных
-  var setLoadData = function (data) {
-
-  };
-
-
   window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
@@ -103,7 +97,6 @@
     randomString: randomString,
     randomVal: randomVal,
 
-    cloneObj: cloneObj,
-    setLoadData: setLoadData
+    cloneObj: cloneObj
   };
 })();
