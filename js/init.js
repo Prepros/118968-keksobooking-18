@@ -29,6 +29,9 @@
 
       // Отправка формы через ajax
       window.backend.request('POST', window.assets.link.save, callback, data);
+
+      // Деактивируем страницу
+      window.page.deactive();
     });
 
     // Событие изменения значений полей формы

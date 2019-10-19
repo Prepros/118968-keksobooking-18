@@ -124,6 +124,9 @@
     // Удаляем страные пины
     window.pin.removePin();
 
+    // Удаляем карточку объявления
+    window.card.removeCard();
+
     // Загружаем новые пины
     window.backend.loadData(function (xhr) {
       var data = xhr.response;
