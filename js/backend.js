@@ -1,113 +1,110 @@
 'use strict';
 
 (function () {
-  var errorMessage = '';
+  // Передает сообщение об ошибке
+  var getErrorMessage = function (status, text) {
+    var errorCode = window.assets.errorCode;
+    var errorMessage = '';
+
+    if (status === 200) {
+      return errorMessage;
+    }
+
+    if (status && errorCode[status]) {
+      errorMessage = status + ' Ошибка. ' + errorCode[status];
+    } else {
+      errorMessage = 'Не удалось получить данные: <br>' + status;
+    }
+
+    if (text && text.length > 0) {
+      errorMessage += ' ' + text;
+    }
+
+    return errorMessage;
+  };
+
+
+  // Запрос к серверу
+  var request = function (method, url, callback, data, type) {
+    // Текст ошибок
+    var errorMessage = '';
+
+    // Запрос
+    var xhr = new XMLHttpRequest();
+
+    // Тип запроса, по умолчанию json
+    if (type && typeof type === 'string') {
+      xhr.responseType = type;
+    } else {
+      xhr.responseType = window.assets.responseType;
+    }
+
+    // Если запрос завершен
+    xhr.addEventListener('load', function () {
+      // Если не успешно
+      if (xhr.status !== window.assets.successCode) {
+        errorMessage = 'Статус ответа: ' + xhr.status + ' ' + xhr.statusText;
+
+        callback.error(xhr, callback.errorText);
+        throw new Error(errorMessage);
+      }
+
+      // Если успешно
+      callback.success(xhr, callback.successText);
+
+      // Глобальные данные
+      // window.data = xhr.response;
+    });
+
+    // Если возникли ошибки
+    xhr.addEventListener('error', function () {
+      errorMessage = getErrorMessage(xhr.status, xhr.statusText);
+
+      callback.error(errorMessage);
+      throw new Error(errorMessage);
+    });
+
+    // Если время запроса вышло
+    xhr.addEventListener('timeout', function () {
+      errorMessage = 'Ожидание превысило ' + (xhr.timeout / 1000) + ' секунд.';
+
+      callback.error(errorMessage);
+      throw new Error(errorMessage);
+    });
+
+
+    // Отправляет запрос
+    xhr.timeout = 10000; // 10 sec
+    xhr.open(method, url);
+    xhr.send(data);
+  };
+
 
   // Загрузка данных
-  var loadData = function (url, onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
+  var loadData = function (onSuccess, onError) {
+    var callback = {
+      success: onSuccess,
+      error: onError ? onError : window.notification.error
+    };
 
-    xhr.timeout = 10000;
-    xhr.open('GET', url);
-    xhr.send();
-
-    xhr.addEventListener('load', function () {
-      errorMessage = '<br>' + xhr.status + ' ' + xhr.statusText;
-
-      try {
-        var data = JSON.parse(xhr.responseText);
-      } catch (e) {
-        errorMessage = 'Не удалось получить данные: <br>' + xhr.status + ' ' + xhr.statusText;
-        onError(errorMessage);
-        throw new Error(errorMessage + e);
-      }
-
-      switch (xhr.status) {
-        case 200:
-          onSuccess(data);
-          break;
-        case 400:
-          errorMessage = 'Неправильный запрос: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-        case 404:
-          errorMessage = 'Запрашиваемый ресурс не найден: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-        case 500:
-          errorMessage = 'Ошибка на сервере: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-        default:
-          errorMessage = 'Ошибка: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      errorMessage = 'Не удалось получить данные';
-      onError(errorMessage);
-      throw new Error(errorMessage);
-    });
-
-    xhr.addEventListener('timeout', function () {
-      errorMessage = 'Ожидание превысило ' + (xhr.timeout / 1000) + ' секунд.';
-      onError(errorMessage);
-      throw new Error(errorMessage);
-    });
+    request('GET', window.assets.link.load, callback);
   };
-
 
   // Отправка данных
-  var saveData = function (url, data, onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
+  var uploadData = function (data, onSuccess, onError) {
+    var callback = {
+      success: onSuccess,
+      error: onError ? onError : window.notification.error
+    };
 
-    xhr.timeout = 10000;
-    xhr.open('POST', url);
-    xhr.send(data);
-
-    xhr.addEventListener('load', function () {
-      errorMessage = '<br>' + xhr.status + ' ' + xhr.statusText;
-
-      switch (xhr.status) {
-        case 200:
-          onSuccess('Объяление отправлено.');
-          break;
-        case 400:
-          errorMessage = 'Неправильный запрос: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-        case 404:
-          errorMessage = 'Запрашиваемый ресурс не найден: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-        case 500:
-          errorMessage = 'Ошибка на сервере: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-        default:
-          errorMessage = 'Ошибка: ' + errorMessage;
-          onError(errorMessage);
-          throw new Error(errorMessage);
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      errorMessage = 'Не удалось получить данные';
-      onError(errorMessage);
-      throw new Error(errorMessage);
-    });
-
-    xhr.addEventListener('timeout', function () {
-      errorMessage = 'Ожидание превысило ' + (xhr.timeout / 1000) + ' секунд.';
-      onError(errorMessage);
-      throw new Error(errorMessage);
-    });
+    request('POST', window.assets.link.save, callback, data);
   };
 
+
   window.backend = {
-    load: loadData,
-    save: saveData
+    request: request,
+    getError: getErrorMessage,
+    loadData: loadData,
+    uploadData: uploadData
   };
 })();

@@ -5,33 +5,24 @@
   var mapPinMain = window.dom.map.mapPinMain;
   var mapPins = window.dom.map.mapPins;
 
-  // Позиция главного пина по умолчанию
-  var positionMapPinMain = {
-    x: 570,
-    y: 375
-  };
-
-
   // Высота заостренного элемента метки
   var mapPinMainAfterHeight = parseInt(window.getComputedStyle(mapPinMain, '::after').height, 10);
 
 
-  // Создание меток
-  var createPin = function (offers) {
+  // Добавление меток
+  var addPin = function (offers) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < offers.length; i++) {
-      var mapItem = renderPin(offers[i]);
+    offers.forEach(function (value) {
+      var mapItem = renderPin(value);
       fragment.appendChild(mapItem);
-    }
-
-    mapPinMain.addEventListener('click', function () {
-      addPin(fragment);
     });
+
+    mapPins.appendChild(fragment);
   };
 
 
-  // Отрисовка меток
+  // Создание меток
   var renderPin = function (offer) {
     var templatePin = document.querySelector('#pin').content;
     var mapPin = templatePin.querySelector('.map__pin');
@@ -54,14 +45,6 @@
     });
 
     return itemPin;
-  };
-
-
-  // Добавление меток
-  var addPin = function (pins) {
-    if (pins) {
-      mapPins.appendChild(pins);
-    }
   };
 
 
@@ -91,11 +74,8 @@
 
   // Возврат главного пина в исходное положение
   var setPositionMapPinMainDefault = function () {
-    mapPinMain.style.top = positionMapPinMain.y + 'px';
-    mapPinMain.style.left = positionMapPinMain.x + 'px';
-
-    // Устанавливаем координаты главной метки по умолчанию
-    window.form.setAddressPinMain();
+    mapPinMain.style.top = window.assets.locateMainPin.y + 'px';
+    mapPinMain.style.left = window.assets.locateMainPin.x + 'px';
   };
 
 
@@ -129,24 +109,27 @@
 
       // Допустимые значения для смещения главной метки по оси X
       var shiftMapPinMainX = {
-        min: window.data.sizeMap.width.min - (mapPinMain.offsetWidth / 2),
-        max: window.data.sizeMap.width.max - (mapPinMain.offsetWidth / 2)
+        min: window.assets.sizeMap['WIDTH_MIN'] - (mapPinMain.offsetWidth / 2),
+        max: window.assets.sizeMap['WIDTH_MAX'] - (mapPinMain.offsetWidth / 2)
       };
 
       // Допустимые значения для смещения главной метки по оси Y
       var shiftMapPinMainY = {
-        min: window.data.sizeMap.height.min - (mapPinMain.offsetHeight / 2),
-        max: window.data.sizeMap.height.max - mapPinMainAfterHeight
+        min: window.assets.sizeMap['HEIGHT_MIN'] - (mapPinMain.offsetHeight / 2),
+        max: window.assets.sizeMap['HEIGHT_MAX'] - mapPinMainAfterHeight
       };
 
+      // Изменение положения метки по оси Y
       if (mapPinMainTop >= shiftMapPinMainY.min && mapPinMainTop <= shiftMapPinMainY.max) {
         mapPinMain.style.top = mapPinMainTop + 'px';
       }
 
+      // Изменение положения метки по оси X
       if (mapPinMainLeft >= shiftMapPinMainX.min && mapPinMainLeft <= shiftMapPinMainX.max) {
         mapPinMain.style.left = mapPinMainLeft + 'px';
       }
 
+      // Описываем координаты главной метки в поле адрес
       window.form.setAddressPinMain(true);
     };
 
@@ -165,7 +148,6 @@
 
 
   window.pin = {
-    createPin: createPin,
     addPin: addPin,
     deactivatePin: deactivatePin,
     removePin: removePin,

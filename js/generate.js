@@ -2,30 +2,22 @@
 
 (function () {
   // Размер карты
-  var sizeMap = {
-    width: {
-      min: 0,
-      max: window.dom.map.mapPins.offsetWidth
-    },
-    height: {
-      min: 130,
-      max: 630
-    }
-  };
+  var mapData = window.assets.sizeMap;
 
+  // Расценки
+  var priceData = window.assets.sizePrice;
 
-  // Размеры пина объявления
-  var sizePin = {
-    width: 50,
-    height: 70
-  };
+  // Тип здания и цены
+  var typePriceData = window.assets.typePrice;
 
+  // Время заселения и выселения
+  var timesData = window.assets.time;
 
-  // Ссылка получения данных с сервера
-  var link = {
-    load: 'https://js.dump.academy/keksobooking/data',
-    save: 'https://js.dump.academy/keksobooking'
-  };
+  // Виды услуг
+  var featuresData = window.assets.feature;
+
+  // Виды услуг
+  var pinData = window.assets.sizePin;
 
 
   // Генерация чисел 01 - 08 / 10 - 18 / n0 - n8 кроме 9
@@ -85,7 +77,10 @@
     var address = [];
 
     for (var i = 1; i <= count; i++) {
-      address.push(window.util.randomVal(0, 600) + ', ' + window.util.randomVal(0, 600));
+      var x = window.util.randomVal(mapData['WIDTH_MIN'], mapData['WIDTH_MAX']);
+      var y = window.util.randomVal(mapData['HEIGHT_MIN'], mapData['HEIGHT_MAX']);
+
+      address.push(x + '; ' + y);
     }
 
     return address;
@@ -101,7 +96,7 @@
     var prices = [];
 
     for (var i = 1; i <= count; i++) {
-      prices.push(window.util.randomVal(5000, 100000));
+      prices.push(window.util.randomVal(priceData.MIN, priceData.MAX));
     }
 
     return prices;
@@ -114,12 +109,7 @@
       count = 1;
     }
 
-    var types = [
-      'palace',
-      'flat',
-      'house',
-      'bungalo'
-    ];
+    var types = Object.keys(typePriceData);
 
     var typesList = [];
 
@@ -141,7 +131,7 @@
     var guests = [];
 
     for (var i = 1; i <= count; i++) {
-      guests.push(window.util.randomVal(1, 20));
+      guests.push(window.util.randomVal(0, 3));
     }
 
     return guests;
@@ -157,7 +147,7 @@
     var rooms = [];
 
     for (var i = 1; i <= count; i++) {
-      rooms.push(window.util.randomVal(1, 10));
+      rooms.push(window.util.randomVal(1, 100));
     }
 
     return rooms;
@@ -170,16 +160,10 @@
       count = 1;
     }
 
-    var checkin = [
-      '12:00',
-      '13:00',
-      '14:00'
-    ];
-
     var checkinList = [];
 
     for (var i = 1; i <= count; i++) {
-      var randomCheckin = checkin[window.util.randomVal(0, checkin.length - 1)];
+      var randomCheckin = timesData[window.util.randomVal(0, timesData.length - 1)];
       checkinList.push(randomCheckin);
     }
 
@@ -193,26 +177,20 @@
       count = 1;
     }
 
-    var features = [
-      'wifi',
-      'dishwasher',
-      'parking',
-      'washer',
-      'elevator',
-      'conditioner'
-    ];
-
     var featuresList = [];
 
+    // Количсетво генераций
     for (var i = 0; i < count; i++) {
-      var featuresCount = window.util.randomVal(1, features.length);
+      var featuresCount = window.util.randomVal(1, featuresData.length);
       featuresList[i] = [];
 
+      // Количество услуг
       for (var j = 0, key = 0; j < featuresCount; j++) {
-        var featuresRandom = window.util.randomVal(0, features.length - 1);
+        var featuresRandom = window.util.randomVal(0, featuresData.length - 1);
 
-        var item = features[featuresRandom];
+        var item = featuresData[featuresRandom];
 
+        // Если выпавшей услуши еще нет в списке добавляем
         if (featuresList[i].indexOf(item) === -1) {
           featuresList[i][key] = item;
           key++;
@@ -230,25 +208,26 @@
       count = 1;
     }
 
-    var photos = [];
-
+    // Ссылки на фотографии
+    var photoLinks = [];
     for (var i = 1; i <= 3; i++) {
-      photos.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
+      photoLinks.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
     }
 
+    // Генерируем массив для фотографий
     var photosList = [];
+    for (var j = 0; j < count; j++) {
+      var photosCount = window.util.randomVal(1, photoLinks.length);
+      photosList[j] = [];
 
-    for (i = 0; i < count; i++) {
-      var photosCount = window.util.randomVal(1, photos.length);
-      photosList[i] = [];
+      // Генерируем фотографии
+      for (var k = 0, key = 0; k < photosCount; k++) {
+        var photosRandom = window.util.randomVal(0, photoLinks.length - 1);
 
-      for (var j = 0, key = 0; j < photosCount; j++) {
-        var photosRandom = window.util.randomVal(0, photos.length - 1);
+        var item = photoLinks[photosRandom];
 
-        var item = photos[photosRandom];
-
-        if (photosList[i].indexOf(item) < 0) {
-          photosList[i][key] = item;
+        if (photosList[j].indexOf(item) < 0) {
+          photosList[j][key] = item;
           key++;
         }
       }
@@ -267,7 +246,8 @@
     var descriptions = [];
 
     for (var i = 1; i <= count; i++) {
-      descriptions.push(window.util.randomString(window.util.randomVal(100, 500)));
+      var lengthString = window.util.randomVal(100, 500);
+      descriptions.push(window.util.randomString(lengthString));
     }
 
     return descriptions;
@@ -280,20 +260,19 @@
       count = 1;
     }
 
-
     // Координаты пинов
     var locations = [];
 
     // Задаем случайниые координаты для пинов объявлений
     for (var i = 0; i < count; i++) {
       locations[i] = [];
-      locations[i]['x'] = window.util.randomVal(sizeMap.width.min, sizeMap.width.max);
-      locations[i]['y'] = window.util.randomVal(sizeMap.height.min, sizeMap.height.max);
+      locations[i]['x'] = window.util.randomVal(mapData['WIDTH_MIN'], mapData['WIDTH_MAX']);
+      locations[i]['y'] = window.util.randomVal(mapData['HEIGHT_MIN'], mapData['HEIGHT_MAX']);
     }
 
     // Координаты относительно нижней центральной точки
-    locations.x = Math.floor(locations.x - (sizePin.width / 2));
-    locations.y = locations.y - sizePin.height;
+    locations.x = Math.floor(locations.x - (pinData.WIDTH / 2));
+    locations.y = locations.y - pinData.HEIGHT;
 
     return locations;
   };
@@ -353,10 +332,6 @@
   };
 
 
-  window.data = {
-    generateOffer: generateOffer,
-    sizeMap: sizeMap,
-    sizePin: sizePin,
-    link: link
-  };
+  window.generate = generateOffer;
 })();
+

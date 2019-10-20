@@ -6,18 +6,23 @@
   var mapPins = mapContainer.querySelector('.map__pins');
   var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
-
   // DOM элементы фильтрации объявлений
   var mapFilterContainer = mapContainer.querySelector('.map__filters-container');
   var mapFilter = mapFilterContainer.querySelector('.map__filters');
   var mapFilterSelects = mapFilter.querySelectorAll('select');
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
 
+  var filterType = mapFilter.querySelector('#housing-type');
+  var filterPrice = mapFilter.querySelector('#housing-price');
+  var filterRooms = mapFilter.querySelector('#housing-rooms');
+  var filterGuests = mapFilter.querySelector('#housing-guests');
+  var filterFeature = mapFilter.querySelector('#housing-features');
 
   // DOM элементы форма добавления нового объявления
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
 
+  // Поля формы
   var titleForm = adForm.querySelector('#title');
   var addressForm = adForm.querySelector('#address');
   var typeHouseForm = adForm.querySelector('#type');
@@ -29,7 +34,7 @@
 
 
   // DOM элементы карты
-  var map = {
+  var Map = {
     mapContainer: mapContainer,
     mapPins: mapPins,
     mapPinMain: mapPinMain
@@ -37,15 +42,22 @@
 
 
   // DOM элементы фильтра
-  var filter = {
+  var Filter = {
     filterContainer: mapFilterContainer,
+    form: mapFilter,
     selects: mapFilterSelects,
-    fieldsets: mapFilterFieldsets
+    fieldsets: mapFilterFieldsets,
+
+    type: filterType,
+    price: filterPrice,
+    rooms: filterRooms,
+    guests: filterGuests,
+    feature: filterFeature
   };
 
 
   // DOM элементы формы
-  var form = {
+  var Form = {
     adForm: adForm,
     title: titleForm,
     address: addressForm,
@@ -62,8 +74,8 @@
 
   // Общий DOM
   window.dom = {
-    map: map,
-    filter: filter,
-    form: form
+    map: Map,
+    filter: Filter,
+    form: Form
   };
 })();
