@@ -123,6 +123,10 @@
     feature: window.dom.filter.feature
   };
 
+  // Интервал дребезга
+  var DEBOUNCE_INTERVAL = 500;
+
+
   window.assets = {
     sizeMap: Map,
     sizePin: Pin,
@@ -140,6 +144,7 @@
     responseType: RESPONSE_TYPE,
     successCode: SUCCESS_CODE,
     filterPrice: filterPriceMap,
-    filter: filterMap
+    filter: filterMap,
+    debounce: DEBOUNCE_INTERVAL
   };
 })();

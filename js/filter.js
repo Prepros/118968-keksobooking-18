@@ -119,10 +119,13 @@
     return data;
   };
 
-
-  form.addEventListener('change', function () {
+  //
+  var onFilterData = window.debounce(function () {
     // Удаляем страные пины
     window.pin.removePin();
+
+    // Удаляем карточку объявления
+    window.card.removeCard();
 
     // Загружаем новые пины
     window.backend.loadData(function (xhr) {
@@ -140,7 +143,10 @@
       // Выводим данные
       window.pin.addPin(data);
     });
-  }, true);
+  });
+
+
+  form.addEventListener('change', onFilterData, true);
 
   window.filter = {
     filterEnabled: filterEnabled,
