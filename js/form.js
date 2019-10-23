@@ -11,6 +11,18 @@
   var capacityForm = window.dom.form.capacity;
   var addressForm = window.dom.form.address;
 
+  var submitForm = window.dom.form.submit;
+  var resetForm = window.dom.form.reset;
+
+  // Миниатюра объявления
+  var avatarUpload = window.dom.form.avatar.upload;
+  var avatarUploadImg = window.dom.form.avatar.img;
+  var avatarUploadDrop = window.dom.form.avatar.drop;
+  var avatarUploadFile = window.dom.form.avatar.file;
+
+  // Данные с формы
+  var dataReader = new FormData();
+
 
   // Активируем форму
   var formEnabled = function () {
@@ -141,6 +153,9 @@
 
     // Синхронизируем временя заезда и временя выезда
     setTimeInOut();
+
+    // Миниатюра объявления по умолчанию
+    setAvatarDefault();
 
     // Убираем сообщения об ошибках
     removeErrorBlock(titleForm);
@@ -286,6 +301,9 @@
       case 'timeout':
         setTimeInOut();
         break;
+      case 'avatar':
+        setAvatarFile(evt);
+        break;
     }
   };
 
@@ -298,6 +316,111 @@
   };
 
 
+  // Слушаем форму
+  var listenForm = function () {
+    // Валидация формы
+    submitForm.addEventListener('click', onInvalidForm);
+
+    // Отправка формы
+    form.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+
+      var data = new FormData(form);
+      var avatar = dataReader.get('avatar');
+
+      data.append('avatar', avatar);
+
+      var callback = {
+        success: window.notification.success,
+        error: window.notification.error,
+        successText: 'Объявление успешно добавилось'
+      };
+
+      // Отправка формы через ajax
+      window.backend.request('POST', window.assets.link.save, callback, data);
+
+      // Деактивируем страницу
+      window.page.deactive();
+    });
+
+    // Событие изменения значений полей формы
+    form.addEventListener('input', onChangeInput, true);
+
+    // Сброс формы
+    resetForm.addEventListener('click', onResetForm);
+  };
+
+
+  // Живая загрузка миниатюры объявления
+  var setAvatarFile = function (evt) {
+    // var avatarUpload = window.dom.form.avatar.upload;
+    // var avatarUploadImg = window.dom.form.avatar.img;
+    // var avatarUploadDrop = window.dom.form.avatar.drop;
+    // var avatarUploadFile = window.dom.form.avatar.file;
+
+    var file = evt.dataTransfer ? evt.dataTransfer.files[0] : avatarUploadFile.files[0];
+    var fileTypes = window.assets.fileTypes;
+
+    var match = fileTypes.some(function (item) {
+      return file.name.endsWith(item);
+    });
+
+    if (match) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        avatarUploadImg.src = reader.result;
+        dataReader.append('avatar', file);
+      });
+
+      reader.readAsDataURL(file);
+    }
+
+  };
+
+  var setAvatarDefault = function () {
+    avatarUploadImg.src = window.assets.pathAvatar;
+  };
+
+
+
+  // Отменяем действия по умолчанию и всплытие
+  window.util.manyEvents(['dragenter', 'dragover', 'dragleave', 'drop'], function (item) {
+    avatarUploadDrop.addEventListener(item, function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+    });
+  });
+
+  // Поведение над областю перемещения
+  window.util.manyEvents(['dragenter', 'dragover'], function (item) {
+    avatarUploadDrop.addEventListener(item, function () {
+      avatarUploadDrop.classList.add('upload');
+    });
+  });
+
+  // Поведение вне области перемещения
+  window.util.manyEvents(['dragleave', 'drop'], function (item) {
+    avatarUploadDrop.addEventListener(item, function () {
+      avatarUploadDrop.classList.remove('upload');
+    });
+  });
+
+  // После перемещения
+  avatarUploadDrop.addEventListener('drop', function (evt) {
+    var dt = evt.dataTransfer;
+    var files = dt.files;
+
+    setAvatarFile(evt);
+    // handleFiles(files);
+  });
+
+
+
+
+
+
+
   window.form = {
     formEnabled: formEnabled,
     formDisabled: formDisabled,
@@ -305,9 +428,6 @@
     setAddressPinMain: setAddressPinMain,
     setFormDefault: setFormDefault,
 
-    onInvalidForm: onInvalidForm,
-    onChangeInput: onChangeInput,
-    onInputEdit: onInputEdit,
-    onResetForm: onResetForm
+    listenForm: listenForm
   };
 })();

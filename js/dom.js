@@ -32,6 +32,11 @@
   var submitForm = adForm.querySelector('.ad-form__submit');
   var resetForm = adForm.querySelector('.ad-form__reset');
 
+  var avatarUpload = adForm.querySelector('.ad-form-header__upload');
+  var avatarUploadImg = avatarUpload.querySelector('.ad-form-header__preview img');
+  var avatarUploadDrop = adForm.querySelector('.ad-form-header__drop-zone');
+  var avatarUploadFile = adForm.querySelector('.ad-form-header__input');
+
 
   // DOM элементы карты
   var Map = {
@@ -68,7 +73,14 @@
     submit: submitForm,
     reset: resetForm,
 
-    fieldsets: adFormFieldsets
+    fieldsets: adFormFieldsets,
+
+    avatar: {
+      upload: avatarUpload,
+      img: avatarUploadImg,
+      drop: avatarUploadDrop,
+      file: avatarUploadFile,
+    }
   };
 
 
