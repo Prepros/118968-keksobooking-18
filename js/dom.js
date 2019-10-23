@@ -37,6 +37,11 @@
   var avatarUploadDrop = adForm.querySelector('.ad-form-header__drop-zone');
   var avatarUploadFile = adForm.querySelector('.ad-form-header__input');
 
+  var thumbContainer = adForm.querySelector('.ad-form__photo-container');
+  var thumbUploadFile = thumbContainer.querySelector('.ad-form__input');
+  var thumbUploadDrop = thumbContainer.querySelector('.ad-form__drop-zone');
+  var thumbUploadImg = thumbContainer.querySelector('.ad-form__photo');
+
 
   // DOM элементы карты
   var Map = {
@@ -80,6 +85,13 @@
       img: avatarUploadImg,
       drop: avatarUploadDrop,
       file: avatarUploadFile,
+    },
+
+    thumb: {
+      container: thumbContainer,
+      file: thumbUploadFile,
+      drop: thumbUploadDrop,
+      img: thumbUploadImg
     }
   };
 

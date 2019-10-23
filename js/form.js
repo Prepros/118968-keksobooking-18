@@ -15,13 +15,19 @@
   var resetForm = window.dom.form.reset;
 
   // Миниатюра объявления
-  var avatarUpload = window.dom.form.avatar.upload;
   var avatarUploadImg = window.dom.form.avatar.img;
   var avatarUploadDrop = window.dom.form.avatar.drop;
   var avatarUploadFile = window.dom.form.avatar.file;
 
+  // Миниатюры фотографий
+  var thumbUploadFile = window.dom.form.thumb.file;
+  var thumbUploadDrop = window.dom.form.thumb.drop;
+  var thumbUploadImg = window.dom.form.thumb.img;
+
   // Данные с формы
   var dataReader = new FormData();
+
+  var fileTypes = window.assets.fileTypes;
 
 
   // Активируем форму
@@ -140,6 +146,24 @@
   };
 
 
+  // Аватарка по умолчанию
+  var setAvatarDefault = function () {
+    avatarUploadImg.src = window.assets.pathAvatar;
+  };
+
+
+  // Фотографии по умолчанию
+  var setPhotoDefault = function () {
+    var thumbs = document.querySelectorAll('.ad-form__photo');
+
+    thumbs.forEach(function (thumb) {
+      if (thumb.querySelector('img')) {
+        thumb.remove();
+      }
+    });
+  };
+
+
   // Установка значений полей формы по умолчанию
   var setFormDefault = function () {
     // Устанавливаем координаты главной метки по умолчанию
@@ -156,6 +180,9 @@
 
     // Миниатюра объявления по умолчанию
     setAvatarDefault();
+
+    // Список фотографий по умолчанию
+    setPhotoDefault();
 
     // Убираем сообщения об ошибках
     removeErrorBlock(titleForm);
@@ -292,17 +319,20 @@
       case 'price':
         setTypeHousePrice();
         break;
-      // Поле количество комнат
+        // Поле количество комнат
       case 'rooms':
         setRoomsCapacity();
         break;
-      // Поля заселения и выселения
+        // Поля заселения и выселения
       case 'timein':
       case 'timeout':
         setTimeInOut();
         break;
       case 'avatar':
-        setAvatarFile(evt);
+        dragAndDrop(evt, setAvatarFile);
+        break;
+      case 'images':
+        dragAndDrop(evt, setPhotoFile);
         break;
     }
   };
@@ -325,10 +355,13 @@
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
 
+      // Получаем данные с формы
       var data = new FormData(form);
       var avatar = dataReader.get('avatar');
+      var images = dataReader.get('images');
 
       data.append('avatar', avatar);
+      data.append('images', images);
 
       var callback = {
         success: window.notification.success,
@@ -351,21 +384,33 @@
   };
 
 
-  // Живая загрузка миниатюры объявления
-  var setAvatarFile = function (evt) {
-    // var avatarUpload = window.dom.form.avatar.upload;
-    // var avatarUploadImg = window.dom.form.avatar.img;
-    // var avatarUploadDrop = window.dom.form.avatar.drop;
-    // var avatarUploadFile = window.dom.form.avatar.file;
+  // Перемещение
+  var dragAndDrop = function (evt, callback) {
+    // Получаем картинки
+    var files = evt.dataTransfer ? evt.dataTransfer.files : evt.target.files;
 
-    var file = evt.dataTransfer ? evt.dataTransfer.files[0] : avatarUploadFile.files[0];
-    var fileTypes = window.assets.fileTypes;
+    [].map.call(files, function (file) {
+      callback(file);
+    });
+  };
 
+
+  // Чтение файла
+  var readerFile = function (file, callback) {
+    // Проверяем тип файла
     var match = fileTypes.some(function (item) {
       return file.name.endsWith(item);
     });
 
     if (match) {
+      callback(file);
+    }
+  };
+
+
+  // Живая загрузка миниатюры объявления
+  var setAvatarFile = function (file) {
+    readerFile(file, function () {
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
@@ -374,51 +419,67 @@
       });
 
       reader.readAsDataURL(file);
-    }
-
-  };
-
-  var setAvatarDefault = function () {
-    avatarUploadImg.src = window.assets.pathAvatar;
+    });
   };
 
 
+  // Живая загрузка фотографий объявления
+  var setPhotoFile = function (file) {
+    readerFile(file, function () {
+      var reader = new FileReader();
 
-  // Отменяем действия по умолчанию и всплытие
-  window.util.manyEvents(['dragenter', 'dragover', 'dragleave', 'drop'], function (item) {
-    avatarUploadDrop.addEventListener(item, function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
+      reader.addEventListener('load', function () {
+        var photo = thumbUploadImg.cloneNode();
+        var img = document.createElement('img');
+
+        img.src = reader.result;
+        img.width = 70;
+        img.height = 70;
+
+        photo.appendChild(img);
+        thumbUploadImg.insertAdjacentElement('beforeBegin', photo);
+
+        dataReader.append('images', file);
+      });
+
+      reader.readAsDataURL(file);
     });
-  });
+  };
 
-  // Поведение над областю перемещения
-  window.util.manyEvents(['dragenter', 'dragover'], function (item) {
-    avatarUploadDrop.addEventListener(item, function () {
-      avatarUploadDrop.classList.add('upload');
+
+  // Добавялем события для drag and drop
+  var addDragAndDrop = function (element, callback) {
+    // Отменяем действия по умолчанию и всплытие
+    window.util.manyEvents(['dragenter', 'dragover', 'dragleave', 'drop'], function (item) {
+      element.addEventListener(item, function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+      });
     });
-  });
 
-  // Поведение вне области перемещения
-  window.util.manyEvents(['dragleave', 'drop'], function (item) {
-    avatarUploadDrop.addEventListener(item, function () {
-      avatarUploadDrop.classList.remove('upload');
+    // Поведение над областю перемещения
+    window.util.manyEvents(['dragenter', 'dragover'], function (item) {
+      element.addEventListener(item, function () {
+        element.classList.add('upload');
+      });
     });
-  });
 
-  // После перемещения
-  avatarUploadDrop.addEventListener('drop', function (evt) {
-    var dt = evt.dataTransfer;
-    var files = dt.files;
+    // Поведение вне области перемещения
+    window.util.manyEvents(['dragleave', 'drop'], function (item) {
+      element.addEventListener(item, function () {
+        element.classList.remove('upload');
+      });
+    });
 
-    setAvatarFile(evt);
-    // handleFiles(files);
-  });
+    // После перемещения
+    element.addEventListener('drop', function (evt) {
+      dragAndDrop(evt, callback);
+    });
+  };
 
 
-
-
-
+  addDragAndDrop(avatarUploadDrop, setAvatarFile);
+  addDragAndDrop(thumbUploadDrop, setPhotoFile);
 
 
   window.form = {
@@ -428,6 +489,7 @@
     setAddressPinMain: setAddressPinMain,
     setFormDefault: setFormDefault,
 
+    onResetForm: onResetForm,
     listenForm: listenForm
   };
 })();
