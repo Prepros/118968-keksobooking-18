@@ -149,6 +149,7 @@
   // Аватарка по умолчанию
   var setAvatarDefault = function () {
     avatarUploadImg.src = window.assets.pathAvatar;
+    dataReader.delete('avatar');
   };
 
 
@@ -161,6 +162,8 @@
         thumb.remove();
       }
     });
+
+    dataReader.delete('images');
   };
 
 
@@ -346,6 +349,27 @@
   };
 
 
+  // Данные с формы
+  var getFormData = function () {
+    // Получаем данные с формы
+    var data = new FormData(form);
+
+    var avatar = dataReader.get('avatar');
+    var images = dataReader.getAll('images');
+
+
+    if (data.get('images').size <= 0) {
+      [].map.call(images, function (item) {
+        data.append('images', item);
+      });
+    }
+
+    data.set('avatar', avatar);
+
+    return data;
+  };
+
+
   // Слушаем форму
   var listenForm = function () {
     // Валидация формы
@@ -355,16 +379,7 @@
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
 
-      // Получаем данные с формы
-      var data = new FormData(form);
-      var avatar = dataReader.get('avatar');
-      var images = dataReader.getAll('images');
-
-      [].map.call(images, function (item) {
-        data.append('images', item);
-      });
-
-      data.set('avatar', avatar);
+      var data = getFormData();
 
       var callback = {
         success: window.notification.success,
@@ -377,6 +392,8 @@
 
       // Деактивируем страницу
       window.page.deactive();
+
+      form.removeEventListener('input', onInputEdit, true);
     });
 
     // Событие изменения значений полей формы
@@ -418,7 +435,7 @@
 
       reader.addEventListener('load', function () {
         avatarUploadImg.src = reader.result;
-        dataReader.append('avatar', file);
+        dataReader.set('avatar', file);
       });
 
       reader.readAsDataURL(file);
