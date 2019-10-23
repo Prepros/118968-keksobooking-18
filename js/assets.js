@@ -126,6 +126,12 @@
   // Интервал дребезга
   var DEBOUNCE_INTERVAL = 500;
 
+  // Типы файлов
+  var FILE_TYPES = ['gif', 'png', 'jpg', 'jpeg'];
+
+  // Путь по умолчанию к миниатюре объявления
+  var PATH_AVATAR_IMG = 'img/muffin-grey.svg';
+
 
   window.assets = {
     sizeMap: Map,
@@ -145,6 +151,8 @@
     successCode: SUCCESS_CODE,
     filterPrice: filterPriceMap,
     filter: filterMap,
-    debounce: DEBOUNCE_INTERVAL
+    debounce: DEBOUNCE_INTERVAL,
+    fileTypes: FILE_TYPES,
+    pathAvatar: PATH_AVATAR_IMG
   };
 })();

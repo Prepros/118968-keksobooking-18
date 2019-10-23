@@ -89,6 +89,14 @@
   };
 
 
+  // Множетсвенные события
+  var manyEvents = function (events, callback) {
+    events.forEach(function (item) {
+      callback(item);
+    });
+  };
+
+
   window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
@@ -97,6 +105,7 @@
     randomString: randomString,
     randomVal: randomVal,
 
-    cloneObj: cloneObj
+    cloneObj: cloneObj,
+    manyEvents: manyEvents
   };
 })();

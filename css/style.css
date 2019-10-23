@@ -1253,3 +1253,8 @@ fieldset {
   margin-top: 5px;
   color: red;
 }
+
+.upload {
+  color: red;
+  border-color: red;
+}
