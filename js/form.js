@@ -358,10 +358,13 @@
       // Получаем данные с формы
       var data = new FormData(form);
       var avatar = dataReader.get('avatar');
-      var images = dataReader.get('images');
+      var images = dataReader.getAll('images');
 
-      data.append('avatar', avatar);
-      data.append('images', images);
+      [].map.call(images, function (item) {
+        data.append('images', item);
+      });
+
+      data.set('avatar', avatar);
 
       var callback = {
         success: window.notification.success,
