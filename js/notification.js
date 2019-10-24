@@ -12,7 +12,7 @@
     var errorMessageBlock = errorBlock.querySelector('.error__message');
     var errorButton = errorBlock.querySelector('.error__button');
 
-    if (!message) {
+    if (typeof message === 'undefined') {
       message = xhr.status + ' ' + window.assets.errorCode[xhr.status];
     }
 

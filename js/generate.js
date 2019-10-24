@@ -279,7 +279,7 @@
 
 
   // Генерация объявлений
-  var generateOffer = function (countOffer) {
+  window.generate = function (countOffer) {
     if (!countOffer || countOffer <= 0) {
       countOffer = 8;
     }
@@ -330,8 +330,5 @@
 
     return offer;
   };
-
-
-  window.generate = generateOffer;
 })();
 

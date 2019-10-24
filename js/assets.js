@@ -101,6 +101,8 @@
 
   var SUCCESS_CODE = 200;
 
+  var TIME_OUT = 10000;
+
 
   // Тип данных по умолчанию
   var RESPONSE_TYPE = 'json';
@@ -153,6 +155,7 @@
     filter: filterMap,
     debounce: DEBOUNCE_INTERVAL,
     fileTypes: FILE_TYPES,
-    pathAvatar: PATH_AVATAR_IMG
+    pathAvatar: PATH_AVATAR_IMG,
+    timeOut: TIME_OUT
   };
 })();

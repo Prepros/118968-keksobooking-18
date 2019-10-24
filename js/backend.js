@@ -6,7 +6,7 @@
     var errorCode = window.assets.errorCode;
     var errorMessage = '';
 
-    if (status === 200) {
+    if (status === window.assets.successCode) {
       return errorMessage;
     }
 
@@ -66,15 +66,15 @@
 
     // Если время запроса вышло
     xhr.addEventListener('timeout', function () {
-      errorMessage = 'Ожидание превысило ' + (xhr.timeout / 1000) + ' секунд.';
+      errorMessage = 'Ожидание превысило ' + String(xhr.timeout / window.assets.timeOut) + ' секунд.';
 
-      callback.error(errorMessage);
+      callback.error(xhr, errorMessage);
       throw new Error(errorMessage);
     });
 
 
     // Отправляет запрос
-    xhr.timeout = 10000; // 10 sec
+    xhr.timeout = window.assets.timeOut; // 10 sec
     xhr.open(method, url);
     xhr.send(data);
   };

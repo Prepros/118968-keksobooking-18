@@ -74,7 +74,7 @@
     }
 
     // Координаты метки
-    addressForm.value = 'x: ' + locatePinMain.x + '; y: ' + locatePinMain.y;
+    addressForm.value = locatePinMain.x + ', ' + locatePinMain.y;
   };
 
 
