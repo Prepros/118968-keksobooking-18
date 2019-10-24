@@ -17,10 +17,8 @@
   // Миниатюра объявления
   var avatarUploadImg = window.dom.form.avatar.img;
   var avatarUploadDrop = window.dom.form.avatar.drop;
-  var avatarUploadFile = window.dom.form.avatar.file;
 
   // Миниатюры фотографий
-  var thumbUploadFile = window.dom.form.thumb.file;
   var thumbUploadDrop = window.dom.form.thumb.drop;
   var thumbUploadImg = window.dom.form.thumb.img;
 
